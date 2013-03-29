@@ -1,0 +1,133 @@
+%br
+.span-22.prefix-1.last
+  .span-22.center.last.fancy
+    %h1
+      = @demographic.name.titleize
+      Segment
+  .span-21.prefix-1.last.hidden         
+  .span-20{:id => "segment_dashboard", :style => "width:100%;min-height:400px;"}
+    .dashboards-top
+      %small
+        = flash[:notice]
+    .dashboards-bottom-left.span-6.prefix-1
+      .span-6.last{:id => "miniflot_demographic_#{@demographic.name}", :style => "margin:auto auto 40px auto;height:200px;"}
+      %div{:style => 'position:relative;width:60px;height:60px;z-index:1000;margin-left:85px;top:-145px;'}
+        %div{:style => 'width:40px;height:30px;text-align:center;margin:auto;margin-top:20px;font-size:28px'}
+      .span-6.last{:style => "padding-left:15px;"}
+        = form_for(@demographic) do |f|
+          - if @demographic.errors.any?
+            %h2
+              = pluralize(@demographic.errors.count, "error")
+              prohibited this test from being saved:
+            %ul
+              - @demographic.errors.full_messages.each do |msg|
+                %li
+                  = msg
+          .field
+            = f.label :name
+            %br
+            = f.text_field :name
+          .field
+            = f.label :status
+            %br
+            = radio_button_tag(:status, 1, ((@demographic.status == 1) ? true : false))
+            = label_tag(:status_1, "Active")
+            %br
+            = radio_button_tag(:status, 0, ((@demographic.status == 2) ? true : false))
+            = label_tag(:status_0, "Archived")
+          .field
+            = f.label :description
+            %br
+            = f.text_area :description
+          .field
+            = f.label :refreshql
+            %br
+            = f.text_area :refreshql
+          .field
+            %label
+              Refreshql
+              = t(:auto_assign)
+            %br
+            - options_for_select_segments = [["n/a",0]]
+            - @demographic.segments.each do |gs|
+              - prefix = ""
+              .quiet
+                - options_for_select_segments.push(["#{prefix}#{gs.name.titleize} #{gs.populations.count}", gs.id])
+            = f.select(:auto_assign, options_for_select(options_for_select_segments, @demographic.auto_assign))
+          .field
+            %label
+              Refreshql population.<span class="red">replace!</span>
+            %br
+              = f.radio_button(:refreshql_replace, 1)
+              <span class="red"> Yes</span>
+              = f.radio_button(:refreshql_replace, 0)
+              <span> No</span>
+          .span-3{:style => "padding-left:40px;"}
+            %button.minimal{:style => "width:110px; margin:auto;"}
+              %img(src="/images/pencil.png" align="left")
+                = t(:update)
+      %br
+    .dashboards-bottom-right.span-10.prefix-3.last
+      %h2
+        = t(:attributes)
+      %br
+      %b
+        = t(:total_population)
+      = @pop
+      %br
+      %b
+        = t(:initial_population)
+      = @demographic.initial_population
+      %br
+      %b
+        = t(:refreshed_population)
+      = "+" + (@pop - @demographic.initial_population).to_s
+      %br
+      %b
+        = t(:segmented)
+      = @pop - @free
+      %br
+      %b
+        = t(:free)
+      = @free
+      %br
+      %b
+        = t(:created_at)
+      = @demographic.created_at.to_s
+      %br
+      %br
+      %b
+        = t(:recommended_sample_size)
+      = @sample_size.to_i
+      %br
+      %span.quiet
+        = t(:recommended_sample_note)
+      %br
+      %br
+      %b
+        = t(:sql_definition)
+      %br
+      = @demographic.definition
+      .field
+        %h4{:style => "margin-bottom:-10px;"}
+          = render "segments/segments_span"
+        %br
+        - @demographic.segments.each do |gs|
+          - prefix = ""
+          .quiet
+            = prefix + gs.name.titleize
+            = gs.populations.count
+          %br
+      %br
+        = t(:population_log)
+        %small.quiet
+          = t(:population_log_note)
+      .span-6.yspan-4.last.scrollable
+        - refreshed = Population.count_grouped_by_date(@demographic.id).all
+        - refreshed.each do |re|
+          .success
+            %span.quiet
+              = re.the_date_only
+            %b
+              = "+#{re.the_count}"
+.span-22.yspan-2.last

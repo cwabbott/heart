@@ -1,0 +1,44 @@
+.span-22.prefix-1.last
+  .span-22.center.last.fancy
+    %h1
+      Demographics &
+      = render "segments/segments_span"
+  = form_tag(segments_path, :id => "demographic") do
+    .span-4.dashboards
+      .dashboards-top.center
+        <input type="text" id="name" name="name" value="name" size="15" maxlength="15" style="height:14px"/>
+      .dashboards-bottom.center
+        <textarea name="definition" rows="2" cols="16">Definition (SQL)</textarea>
+        %div{:style => "width:110px; margin:auto;"}
+          %button.minimal{:style => "width:110px; margin:auto;"}
+            = image_tag "add.png", :align => "left"
+            = t(:demographic)
+  - @demographics.each do |d|
+    .span-4.dashboards{:id => "box#{d.name}"}
+      .dashboards-buttons-left
+      .dashboards-buttons-right
+      .dashboards-top
+        %div{:style => "margin:auto; width:112px;"}
+          = link_to d.name.titleize, edit_segment_path(d), :class => "button download-itunes"
+      .dashboards-bottom{:id => "miniflot_demographic_#{d.name}", :style => "margin:auto;top:0px;"}
+      :javascript
+        var data = [];
+        $.plot($("#miniflot_demographic_#{d.name}"), data,
+        	{
+        		series: {
+        			pie: {
+        			  label: { show: false },
+        			  innerRadius: 0.5,
+        				show: true,
+        			},
+        			model_object_id: 1,
+        		},
+
+            legend: {
+                show: false
+            },
+            grid: {
+                hoverable: true,
+                clickable: false,
+            }
+        	});

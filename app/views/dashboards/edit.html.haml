@@ -1,0 +1,14 @@
+%br
+= form_for(@dashboard, :html => {:id => "heartform"}) do
+  = render "dashboards/dashboard_form", :metrics => @metrics, :categories => @categories, :annotations => @annotations, :dashboard => @dashboard
+.span-22.prefix-1.center.last.fancy
+  Custom Description (255 char)
+  %br
+  = form_tag(dashboards_path) do
+    = hidden_field "annotation", "fulldate"
+    = hidden_field_tag "dashboard_id", @dashboard.id
+    = text_area "custom", "description", :cols => 75, :rows => 3, :onchange => "HEART.description()"
+%br
+%br
+%br
+%br

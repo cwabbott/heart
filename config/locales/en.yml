@@ -1,0 +1,66 @@
+en:
+  login: "Log in with Google Apps"
+  dashboard_note: "*Changing options in <span class='red'>red</span> causes data to refresh."
+  def: "d"
+  wiki_confidence: "http://en.wikipedia.org/wiki/Confidence_interval"
+  wiki_significance: "http://en.wikipedia.org/wiki/Statistically_significant"
+  dashboards: "Dashboards"
+  dashboard: "Dashboard"
+  all_metrics: "All Metrics"
+  special: Special
+  annotations_public: Annotations
+  annotations_private: Annotations (Private)
+  forecast: Forecasts
+  confidence: "Confidence"
+  significance: Significance
+  targets: "Targets"
+  average: Moving Average
+  no_average: "no average"
+  7day: "7 day"
+  30day: "30 day"
+  90day: "90 day"
+  365day: "365 day"
+  date_from: "Date from"
+  date_to: "Date to"
+  group_by: "SQL Group By"
+  weekday: Weekday
+  week: Week
+  month: Month
+  year: Year
+  measurements: Measurements
+  segments: "Segments"
+  option:
+    image: "Image Export"
+    image_desc: "Export the graph as an image."
+    tsv: "Excel Export"
+    tsv_desc: "Export the graph to tab-separated data for importing to excel"
+    pie: "Pie Graph"
+    pie_desc: "View the data in a pie graph."
+    bars: "Bar Graph"
+    bars_desc: "View the data in a bar graph."
+    lines: "Line Graph"
+    lines_desc: "View the data in a line graph."
+    stack: "Stack Data"
+    stack_desc: "Cumulatively stack each series of data."
+    points: "Data Points"
+    points_desc: "Display data points."
+    zoom: "Zoom"
+    zoom_desc: "Toggle the scroll-to-zoom feature."
+    fill: "Fill"
+    fill_desc: "Display filling between observation and x-axis."
+    table: "Table"
+    table_desc: "Display data in an HTML table below the graph."
+  auto_assign: "Auto Assign"
+  update: "Update"
+  attributes: "Attributes"
+  total_population: "Total Population:"
+  initial_population: "Initial Population:"
+  refreshed_population: "Refreshed Population:"
+  segmented: "Segmented:"
+  free: "Free:"
+  created_at: "Created At:"
+  recommended_sample_size: "Recommended Sample Size:"
+  recommended_sample_note: "(confidence 95%, precision +/-5%, assumed high degree of variability)"
+  sql_definition: "SQL Definition:"
+  population_log: "Population Log"
+  population_log_note: "( initial + refreshql )"
