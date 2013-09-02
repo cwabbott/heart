@@ -154,18 +154,14 @@ var HEART = function(){
       var cache_index = HEART.cacheIndex();
       var exportdata = [], exportlabels = [];
       var movingaverage = '0';
-      var segment = '0';
-      $.each($('input:checkbox:checked.segments'),function(){
-        segment = $(this).val();
-        $.each($('input:checkbox:checked.movingaverages'),function(){
-          movingaverage = $(this).val();
-          $.each($('input:checkbox:checked.measurements'),function(){
-            var flotDataHash = $.trim("flotData" + segment + "_" + movingaverage);
-            if($(this).attr("checked")){
-              exportdata.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data);
-              exportlabels.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].label);
-            }
-          })
+      $.each($('input:checkbox:checked.movingaverages'),function(){
+        movingaverage = $(this).val();
+        $.each($('input:checkbox:checked.measurements'),function(){
+          var flotDataHash = $.trim("flotData" + "_" + movingaverage);
+          if($(this).attr("checked")){
+            exportdata.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data);
+            exportlabels.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].label);
+          }
         })
       });
       var data_table = $('#heart_data_table');
@@ -317,7 +313,7 @@ var HEART = function(){
                 return label.substring(label.indexOf('['));
               }
             }else{
-              return "<a onclick=\"$('#measurement_" + series.att_name + "').attr('checked', false); $('#ratio_" + series.att_name + "').attr('checked', false); HEART.flotGraph().draw(); return false;\">" + label + "</a>";
+              return "<a onclick=\"$('#measurement_" + series.att_name + "').attr('checked', false); HEART.flotGraph().draw(); return false;\">" + label + "</a>";
             }
           } },
         series: { 
@@ -428,22 +424,10 @@ var HEART = function(){
           movingaverages[count] = $(this).val();
           count++;
         });
-        var segments = new Array;
-        count = 0;
-        $.each($('input:checkbox:checked.segments'),function(){
-          segments[count] = $(this).val();
-          count++;
-        });
         var measurements = new Array;
         count = 0;
         $.each($('input:checkbox:checked.measurements'),function(){
           measurements[count] = $(this).val();
-          count++;
-        });
-        var ratios = new Array;
-        count = 0;
-        $.each($('input:checkbox:checked.ratios'),function(){
-          ratios[count] = $(this).val();
           count++;
         });
 
@@ -484,9 +468,7 @@ var HEART = function(){
                     'date_to': flotit_date_to,
                     'group_by': groupbydata,
                     'moving_averages': movingaverages,
-                    'segments': segments,
                     'measurements': measurements,
-                    'ratios': ratios,
                     'method_sum': $('#method_sum').attr('checked'),
                     'dashboard_id': $('#dashboard_id').val(),
                     'description': $('#description').val()
@@ -514,81 +496,67 @@ var HEART = function(){
         options = get_options();
         var count = 0;
         var movingaverage = '0';
-        var segment = '0';
         var flots = new Array;
         var exportdata = [], exportlabels = [];
-        $.each($('input:checkbox:checked.segments'),function(){
-          segment = $(this).val();
-          $.each($('input:checkbox:checked.movingaverages'),function(){
-            movingaverage = $(this).val();
-            var flotDataHash = $.trim("flotData" + segment + "_" + movingaverage);
-            $.each($('input:checkbox:checked.ratios'),function(){
-              if($(this).attr("checked")){
+        $.each($('input:checkbox:checked.movingaverages'),function(){
+          movingaverage = $(this).val();
+          var flotDataHash = $.trim("flotData" + "_" + movingaverage);
+          $.each($('input:checkbox:checked.measurements'),function(){
+            var flotDataHash = $.trim("flotData" + "_" + movingaverage);
+            if($(this).attr("checked")){
+              if($('#yearly_stacked').attr("checked")){
+                //time series is shown with years on top of each other
+                //need to make sure the data for each series covers the entire year.
+                var timeseries_obj_data = HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data;
+                var years = {values : []}, dateObject = new Date(), stacked_index = 1, new_timeseries_obj_data = [];
+                for(var z=0; z < timeseries_obj_data.length; z++){
+                  dateObject.setTime(timeseries_obj_data[z][0]);
+                  if(years.values.findIndex(dateObject.getFullYear()) === false){
+                    //prime the new series with a blank array of data points
+                    years.values.push(dateObject.getFullYear());
+                    stacked_index = years.values.findIndex(dateObject.getFullYear());
+                    new_timeseries_obj_data[stacked_index] = [];
+                    //copy the data series object and pass it a reference to the blank array of data points
+                    flots[count] = jQuery.extend(true, {}, HEART.cacheRead(cache_index)[flotDataHash][$(this).val()]);
+                    flots[count]['xaxis'] = stacked_index + 1;
+                    flots[count]['data'] = new_timeseries_obj_data[stacked_index];
+                    flots[count]['label'] = flots[count]['label'] + dateObject.getFullYear();
+                    flots[count]['lines'] = { fill : (0.6 / years.values.length)};
+                    count++;
+                    //update the reference with data
+                    //make sure all dates from Jan 1, 2xxx until Dec 31, 2xxx are filled
+                    if(dateObject.getDate() != 1 || dateObject.getMonth() != 0){
+                      var loopDate = new Date(dateObject.getFullYear(), 0, 1, dateObject.getHours(), dateObject.getMinutes(),dateObject.getSeconds(),dateObject.getMilliseconds());
+                      //console.log(loopDate.valueOf() + " " + (dateObject.valueOf() + 86400000));
+                      while(loopDate.valueOf() < dateObject.valueOf() + 86400000) {
+                        new_timeseries_obj_data[stacked_index].push([loopDate.valueOf(),0]);
+                        loopDate.setTime(loopDate.valueOf() + 86400000);
+                      }
+                    }
+                    new_timeseries_obj_data[stacked_index].push([timeseries_obj_data[z][0],timeseries_obj_data[z][1]]);
+                  }else{
+                    stacked_index = years.values.findIndex(dateObject.getFullYear());
+                    new_timeseries_obj_data[stacked_index].push([timeseries_obj_data[z][0],timeseries_obj_data[z][1]]);
+                  }
+                }
+                if(dateObject.getDate() != 31 || dateObject.getMonth() != 11){
+                  var loopDate = new Date(dateObject.getFullYear(), 11, 31, dateObject.getHours(), dateObject.getMinutes(),dateObject.getSeconds(),dateObject.getMilliseconds());
+                  console.log(loopDate.valueOf() + " " + (dateObject.valueOf() + 86400000));
+                  while(loopDate.valueOf() >= dateObject.valueOf() + 86400000) {
+                    dateObject.setTime(dateObject.valueOf() + 86400000);
+                    new_timeseries_obj_data[stacked_index].push([dateObject.valueOf(),0]);
+                  }
+                }
+                flots.reverse();
+              }else{
                 flots[count] = HEART.cacheRead(cache_index)[flotDataHash][$(this).val()];
                 count++;
-                if($('#tsv_export').attr("checked")){
-                  exportdata.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data);
-                  exportlabels.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].label);
-                }
               }
-            });
-            $.each($('input:checkbox:checked.measurements'),function(){
-              var flotDataHash = $.trim("flotData" + segment + "_" + movingaverage);
-              if($(this).attr("checked")){
-                if($('#yearly_stacked').attr("checked")){
-                  //time series is shown with years on top of each other
-                  //need to make sure the data for each series covers the entire year.
-                  var timeseries_obj_data = HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data;
-                  var years = {values : []}, dateObject = new Date(), stacked_index = 1, new_timeseries_obj_data = [];
-                  for(var z=0; z < timeseries_obj_data.length; z++){
-                    dateObject.setTime(timeseries_obj_data[z][0]);
-                    if(years.values.findIndex(dateObject.getFullYear()) === false){
-                      //prime the new series with a blank array of data points
-                      years.values.push(dateObject.getFullYear());
-                      stacked_index = years.values.findIndex(dateObject.getFullYear());
-                      new_timeseries_obj_data[stacked_index] = [];
-                      //copy the data series object and pass it a reference to the blank array of data points
-                      flots[count] = jQuery.extend(true, {}, HEART.cacheRead(cache_index)[flotDataHash][$(this).val()]);
-                      flots[count]['xaxis'] = stacked_index + 1;
-                      flots[count]['data'] = new_timeseries_obj_data[stacked_index];
-                      flots[count]['label'] = flots[count]['label'] + dateObject.getFullYear();
-                      flots[count]['lines'] = { fill : (0.6 / years.values.length)};
-                      count++;
-                      //update the reference with data
-                      //make sure all dates from Jan 1, 2xxx until Dec 31, 2xxx are filled
-                      if(dateObject.getDate() != 1 || dateObject.getMonth() != 0){
-                        var loopDate = new Date(dateObject.getFullYear(), 0, 1, dateObject.getHours(), dateObject.getMinutes(),dateObject.getSeconds(),dateObject.getMilliseconds());
-                        //console.log(loopDate.valueOf() + " " + (dateObject.valueOf() + 86400000));
-                        while(loopDate.valueOf() < dateObject.valueOf() + 86400000) {
-                          new_timeseries_obj_data[stacked_index].push([loopDate.valueOf(),0]);
-                          loopDate.setTime(loopDate.valueOf() + 86400000);
-                        }
-                      }
-                      new_timeseries_obj_data[stacked_index].push([timeseries_obj_data[z][0],timeseries_obj_data[z][1]]);
-                    }else{
-                      stacked_index = years.values.findIndex(dateObject.getFullYear());
-                      new_timeseries_obj_data[stacked_index].push([timeseries_obj_data[z][0],timeseries_obj_data[z][1]]);
-                    }
-                  }
-                  if(dateObject.getDate() != 31 || dateObject.getMonth() != 11){
-                    var loopDate = new Date(dateObject.getFullYear(), 11, 31, dateObject.getHours(), dateObject.getMinutes(),dateObject.getSeconds(),dateObject.getMilliseconds());
-                    console.log(loopDate.valueOf() + " " + (dateObject.valueOf() + 86400000));
-                    while(loopDate.valueOf() >= dateObject.valueOf() + 86400000) {
-                      dateObject.setTime(dateObject.valueOf() + 86400000);
-                      new_timeseries_obj_data[stacked_index].push([dateObject.valueOf(),0]);
-                    }
-                  }
-                  flots.reverse();
-                }else{
-                  flots[count] = HEART.cacheRead(cache_index)[flotDataHash][$(this).val()];
-                  count++;
-                }
-                if($('#tsv_export').attr("checked")){
-                  exportdata.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data);
-                  exportlabels.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].label);
-                }
+              if($('#tsv_export').attr("checked")){
+                exportdata.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].data);
+                exportlabels.push(HEART.cacheRead(cache_index)[flotDataHash][$(this).val()].label);
               }
-            });
+            }
           });
         });
         if($('#tsv_export').attr("checked")){

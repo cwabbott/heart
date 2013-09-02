@@ -18,35 +18,8 @@
         .namespace_options.hidden{ :class => namespace}
           - if namespace == (att.underscore.humanize.split(" ").first)
             = check_box_helper "measurement[]", att, {:class => "measurements"}
-            %label{:for => "measurement_#{att}", :class => ("orange" if segment_friendly?(att))}
+            %label{:for => "measurement_#{att}"}
               = t(att.to_s)
-.span-5.prefix-1
-  .yspan-8.span-5.last.clear
-    %fieldset
-      %legend
-        = t(:segments)
-      .yspan-8.span-5.scrollable.last
-        %acronym
-          ALL USERS
-        %br
-        = check_box_helper "segment[]", 0, :class => "segments"
-        %label{:for => "segment_0" }
-          All Users
-        %br
-        - @demographics = Demographic.active.all
-        - @demographics.each do |demo|
-          %br
-          %acronym.tTip{ :title => tool_tip(:title => demo.name, :content => demo.definition, :footer => "Population: #{demo.display_population}") }
-            = demo.name
-          %br
-          - segment = Segment.where(:demographic_id => demo.id).where(:status => [1,2]).all
-          - segment.each do |seg|
-            = check_box_helper "segment[]", seg.id, {:class => "segments"}
-            %label{:for => "segment_#{seg.id}" }
-              %acronym.tTip{ :title => tool_tip(:title => demo.name, :footer => "Population: #{seg.display_population}") }
-                - prefix = ((seg.division_id == '') ? "" : "(#{seg.division_id}) ")
-                = prefix + seg.name.titleize
-            %br
 .span-5.prefix-1
   .yspan-8.span-5.last.clear
     %fieldset

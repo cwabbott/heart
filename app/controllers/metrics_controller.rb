@@ -3,15 +3,13 @@ class MetricsController < ApplicationController
 
   def index
     @metrics = Metric.recently_added
-    @demographics = Demographic.active.all
   end
 
   def show
     #restrict the range of dates to prevent a lot useless metric records
     params[:fulldate] = Date.yesterday unless params[:fulldate] <= Date.yesterday.to_s
-    params[:segment] = (params[:segment].nil?) ? 0 : params[:segment]
-    @metric = Metric.find_or_create(params[:fulldate],0,params[:segment])
-    @isometric = Isometric.find_or_create(params[:fulldate],0,params[:segment])
+    @metric = Metric.find_or_create(params[:fulldate],0)
+    @isometric = Isometric.find_or_create(params[:fulldate],0)
   end
 
   def create
@@ -31,10 +29,9 @@ class MetricsController < ApplicationController
     params[:enddate] = (params[:enddate].nil?) ? params[:fulldate] : params[:enddate]
     startdate = Date.parse(params[:fulldate].to_s)
     enddate = Date.parse(params[:enddate].to_s)
-    params[:segment] = (params[:segment].nil?) ? 0 : params[:segment]
     startdate.upto(enddate) do |date|
-      @metric = Metric.find_or_create(date,0,params[:segment])
-      isometric = Isometric.find_or_create(date,0,params[:segment])
+      @metric = Metric.find_or_create(date,0)
+      isometric = Isometric.find_or_create(date,0)
 
       @metric.send(method)
 

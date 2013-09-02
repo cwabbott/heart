@@ -85,13 +85,11 @@ class DashboardsController < ApplicationController
 
     measurements = (params[:measurements].length == 0) ? false : params[:measurements]
     @metrics = Hash.new
-    params[:segments].each do |x|
-      params[:moving_averages].each do |y|
-        if(params[:method_sum] == "true")
-          @metrics[x.to_s+"_"+y.to_s] = Metric.aggregate_daily_sums(y, where, groupby, x, measurements)
-        else
-          @metrics[x.to_s+"_"+y.to_s] = Metric.aggregate_daily_moving_averages(y, where, groupby, x, measurements)
-        end
+    params[:moving_averages].each do |y|
+      if(params[:method_sum] == "true")
+        @metrics[y.to_s] = Metric.aggregate_daily_sums(y, where, groupby, measurements)
+      else
+        @metrics[y.to_s] = Metric.aggregate_daily_moving_averages(y, where, groupby, measurements)
       end
     end
 

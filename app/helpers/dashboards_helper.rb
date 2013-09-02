@@ -3,7 +3,7 @@ module DashboardsHelper
     value = value.to_s
     name = name.to_s
     if params[:review].nil?
-      if ["movingaverage[]","annotate[]","segment[]"].include?(name) && ["0","1","note"].include?(value)
+      if ["movingaverage[]","annotate[]"].include?(name) && ["0","1","note"].include?(value)
         checked = true
       end
     else
@@ -21,34 +21,20 @@ module DashboardsHelper
     "<div class='tipTitle'>#{options[:title]}</div>#{options[:content]}<br /><br /><hr /><div class='center caps'>#{options[:subtitle]}</div>#{options[:footer]}"
   end
   
-  def segment_friendly?(metric)
-    @friendly ||= Event.select("DISTINCT(metric)").map {|x| x.metric}
-    @friendly.include?(metric)
-  end
-  
   def to_flot_time(date)
     date.to_time.to_i * 1000
   end
   
   # Creates javascript objects to use as hashes for flot graph data series + labels
-  def flot_array(metrics, prefix=nil, hashindex="")
+  def flot_array(metrics)
     replace = false
     hash = Hash.new
-    if metrics.nil? || metrics.first.nil? || metrics.first.movingaverage.nil? || metrics.first.segment_id.nil?
+    if metrics.nil? || metrics.first.nil? || metrics.first.movingaverage.nil?
       replace = true
-      metrics = Metric.aggregate_daily_moving_averages(0, "WHERE fulldate > SUBDATE((SELECT fulldate FROM metrics WHERE movingaverage = 0 AND segment_id = 0 ORDER BY fulldate desc LIMIT 1), 3)", nil, 0)
+      metrics = Metric.aggregate_daily_moving_averages(0, "WHERE fulldate > SUBDATE((SELECT fulldate FROM metrics WHERE movingaverage = 0 ORDER BY fulldate desc LIMIT 1), 3)")
     end
-
     movingaverage = metrics.first.movingaverage
-    segment = metrics.first.segment_id
-    
-    if seg = Segment.find_by_id(segment)
-      seg_name = seg.name
-      dem_name = seg.demographic.name
-    else
-      seg_name = ''
-      dem_name = ''
-    end
+
     #TODO need to move all these options into the HEART js object, set these at runtime, make them easily customizable in the UI
     extraMeasurements = ''
     label_suffix = ''
@@ -56,14 +42,12 @@ module DashboardsHelper
       extraMeasurements = "lines : { show : false, fill : false },"
       label_suffix = ''
     else
-      if movingaverage.to_i == 0 then
-        label_suffix = ": #{dem_name} #{seg_name}"
-      else
+      if movingaverage.to_i > 0
         extraMeasurements = 'points : { show : false, symbol : "circle" }, lines : { show : true, fill : false },'
-        label_suffix = " [#{movingaverage}] : #{dem_name} #{seg_name}"
+        label_suffix = " [MA:#{movingaverage}] "
       end
     end#if replace = true
-    #loop through for all the standard measurements and ratios
+    #loop through for all the standard measurements
     metrics.first.attributes.sort.each do |att, value|
       next unless value.respond_to? :to_f
       next if value.is_a? Time
@@ -75,10 +59,6 @@ module DashboardsHelper
     # Now start creating the data arrays for flot. [date_converted_to_integer, value_of_metric_for_date]
     #
     metrics.each do |metric|
-      #fill between for confidence intervals (shaded 95% percentile of RMSE deviations for forecasting)
-      if movingaverage.to_i == 998
-        @forecasted_metric = Metric.find_or_create(metric.fulldate, 999)
-      end
       metric.attributes.sort.each do |att, value|
         next unless value.respond_to? :to_f
         next if value.is_a? Time
@@ -94,7 +74,7 @@ module DashboardsHelper
       hash[att] = "#{hash[att]} ], att_name : \"#{att}\",},"
     end
 
-    flotdata = "flotData#{prefix}#{segment}_#{movingaverage} : {"
+    flotdata = "flotData_#{movingaverage} : {"
     hash.each { |key, value| flotdata += value + "\n" }
     flotdata += "},"
     flotdata

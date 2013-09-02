@@ -10,16 +10,3 @@
   - @metrics.each do |metric|
     .span-1.center.success
       = link_to metric.dayofmonth.to_s, show_metric_path(:fulldate => metric.fulldate)
-  - @demographics.each do |demo|
-    %hr
-      %h3.center
-        = demo.name
-    %hr
-    - segment = Segment.find_all_by_demographic_id(demo.id)
-    - segment.each do |seg|
-      .span-5.center.clear.notice
-        = seg.name
-      - metrics = Metric.recently_added(0,seg.id)
-      - metrics.each do |metric|
-        .span-1.center.success
-          = link_to metric.dayofmonth.to_s, show_metric_path(:fulldate => metric.fulldate, :segment => seg.id) 
