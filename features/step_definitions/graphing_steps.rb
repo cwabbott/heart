@@ -17,8 +17,8 @@ When /^I graph the example metric data$/ do
 end
 
 Then /^the legend should show the example metric data$/ do
-  page.should have_css('td.legendLabel', :text => 'New Posts')
-  page.should have_css('td.legendLabel', :text => 'New User Accounts')
+  page.should have_css('td.legendLabel', :text => 'PostsNew')
+  page.should have_css('td.legendLabel', :text => 'UsersNew')
 end
 
 Then /^the graph should show the data$/ do

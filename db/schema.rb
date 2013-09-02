@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130327123451) do
+ActiveRecord::Schema.define(:version => 20130902014029) do
 
   create_table "annotations", :force => true do |t|
     t.date     "fulldate"
@@ -89,23 +89,13 @@ ActiveRecord::Schema.define(:version => 20130327123451) do
 
   create_table "isometrics", :force => true do |t|
     t.date     "fulldate"
-    t.integer  "movingaverage",         :default => 0
+    t.integer  "movingaverage", :default => 0
     t.datetime "population"
     t.integer  "segment_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.datetime "postsNew"
     t.datetime "usersNew"
-    t.datetime "threadsNew"
-    t.datetime "threadsUpdated"
-    t.datetime "messagesPrivateNew"
-    t.datetime "messagesThanksNew"
-    t.datetime "usersActivePosts"
-    t.datetime "usersActiveThreads"
-    t.datetime "messagesVisitorNew"
-    t.datetime "blogsNew"
-    t.datetime "infractionsNew"
-    t.datetime "infractionsNewWarning"
   end
 
   create_table "metrics", :force => true do |t|
@@ -115,23 +105,13 @@ ActiveRecord::Schema.define(:version => 20130327123451) do
     t.integer  "weekofyear"
     t.integer  "monthofyear"
     t.integer  "year"
-    t.integer  "movingaverage",         :default => 0
+    t.integer  "movingaverage", :default => 0
     t.integer  "population"
     t.integer  "segment_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "postsNew"
     t.integer  "usersNew"
-    t.integer  "threadsNew"
-    t.integer  "threadsUpdated"
-    t.integer  "messagesPrivateNew"
-    t.integer  "messagesThanksNew"
-    t.integer  "usersActivePosts"
-    t.integer  "usersActiveThreads"
-    t.integer  "messagesVisitorNew"
-    t.integer  "blogsNew"
-    t.integer  "infractionsNew"
-    t.integer  "infractionsNewWarning"
   end
 
   add_index "metrics", ["movingaverage"], :name => "index_metrics_on_movingaverage"
