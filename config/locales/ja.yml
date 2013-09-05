@@ -1,7 +1,4 @@
-ja:
-  login: ログインする
-  dashboard_note: "*<span class='red'>赤い</span>オプションは、リフレッシュ必要です。"
-  def: 定義
+ja_heart:
   wiki_confidence: "http://ja.wikipedia.org/wiki/%E4%BF%A1%E9%A0%BC%E5%8C%BA%E9%96%93"
   wiki_significance: "http://ja.wikipedia.org/wiki/%E6%9C%89%E6%84%8F"
   dashboards: ダッシュボード

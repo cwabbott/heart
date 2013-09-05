@@ -1,0 +1,89 @@
+.span-22.prefix-1.clear.last
+  %fieldset
+    = hidden_field_tag "dashboard_id", @dashboard ? @dashboard.id : 0, {:id => "dashboard_id"}
+    = hidden_field_tag "dashboards", '', {:id => "dashboards"}
+    %legend
+      %span{:id => "legend"}
+    .span-22.last
+      #overlay.black_overlay
+      #loadingGif.overlay_content.fancy
+        Loading...
+      #description_div.span-20.suffix-1.prefix-1.fancy
+      #flot.flot.span-22.yspan-10
+    #flotlegend.span-21.light-contrast
+    .span-21.prefix-1.last
+      = render "heart_form"
+.span-16.last
+  .panel
+    %h3
+    %br
+    #charts.scrollable{:style => "height:70%"}
+      .span-4
+        = image_tag "heart/disk.png", :id => "dash_graph1", :onclick => "add_chart(1);"
+        <input type="text" name="chart_title" id="chart_title1" maxlength="20" style="width:110px;" value="Chart Title" />
+        #flot1.flot.flotmini.span-4.yspan-3{:style => "border:1px dashed #444;", :onclick => "HEART.flotGraph().draw({ serialized : charts.ordered[1][1]});$('#legend').html(charts.ordered[1][0]);"}
+    .hidden
+      <textarea name="charts_serialized" id="charts_serialized" cols="0" rows="0"></textarea>
+    %p
+      <button class="thoughtbot" onclick="return check_dashboards();" id="check_save_dashboard">Save &amp; Exit</button>
+  #trigger
+    #trigger_title.span-1
+    <input type="text" name="title" id="dashboard_title" maxlength="18" placeholder="#{@dashboard.try(:title)}" value="#{@dashboard.try(:title)}" />
+    #trigger_button.span-1.last
+:javascript
+  $('#overlay, #loadingGif').hide();
+  var charts = new Object({
+    ordered : #{((@dashboard.try(:dashboard)).to_s == '') ? "[]" : @dashboard.dashboard.to_s}
+  });
+
+  var charts_added = 1;
+  function add_chart(order, page_loading){
+    var next_in_order = 0;
+    next_in_order = order + 1;
+    var serialized_options = (page_loading) ? { serialized : charts.ordered[order][1]} : null;
+    HEART.miniGraph({ target : '#flot' + order }).draw(serialized_options);
+    var chart = [$('#chart_title' + order).val(), $('#heartform input:checkbox').serialize().toString()]
+    charts.ordered[order] = chart;
+    if(next_in_order > charts_added){
+      charts_added++;
+      $('#charts').append("<div class='span-4' id='minichart_"+ next_in_order + "'>" +
+                      "<img onclick=\"add_chart("+ next_in_order + ")\" src='/assets/heart/disk.png' class='cursor'> " +
+                      "<img onclick=\"del_chart("+ next_in_order + ")\" src='/assets/heart/delete.png' class='cursor'> " +
+                      "<input type=\"text\" name=\"chart_title\" id=\"chart_title" + next_in_order + "\" maxlength=\"20\" style=\"width:110px;\" placeholder=\"Chart Title\" />" +
+                      "<div class='flot flotmini span-4 yspan-3' id='flot"+ next_in_order + "' style='border:1px dashed #444;'  onclick=\"HEART.flotGraph().draw({ serialized : charts.ordered["+ next_in_order + "][1]}); $('#legend').html(charts.ordered["+ next_in_order + "][0]);\"></div>" +
+                   " </div>");
+    }
+  }
+
+  function del_chart(order){
+    charts.ordered[order] = false;
+    $('#minichart_'+order).remove();
+  }
+  function check_dashboards(){
+    while(charts.ordered.findIndex(false) !== false){
+      charts.ordered.splice(charts.ordered.findIndex(false), 1);
+    }
+    $('#charts_serialized').val(JSON.stringify(charts.ordered));
+    if($('#dashboard_title').val() == "Dashboard Name" || $('#dashboard_title').val() == ""){
+      alert('Please change the name of the dashboard');
+      $('#dashboard_title').addClass('error');
+      return false;
+    }
+    if(charts.ordered.length > 0){
+      return true;
+    }else{
+      alert('You must add a graph before saving!');
+      return false;
+    }
+  }
+
+  for(x=0;x<charts.ordered.length;x++){
+    if(x>0){
+      $("#chart_title"+x).val(charts.ordered[x][0]);
+      add_chart(x, true);
+    }
+    if(x == 1){
+      $("#chart_title"+x).val(charts.ordered[x][0]);
+      HEART.flotGraph().draw({ serialized : charts.ordered[x][1]});
+    }
+  }
