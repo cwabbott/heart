@@ -3,6 +3,7 @@ db/*.sqlite3
 log/*.log
 tmp/**/*
 config/database.yml
+test/dummy/config/database.yml
 1year_response.json
 3year_response.json
 5year_response.json

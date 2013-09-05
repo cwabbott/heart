@@ -1,0 +1,17 @@
+.span-4.dashboards
+  .dashboards-buttons-left
+    = link_to image_tag("heart/delete.png", :align => "left", :alt => "Archive", :title => "Archive Dashboard", :onclick => "return confirm('Are you sure you want to archive this dashboard?');"), dashboard_archive_path(dashboard)
+  .dashboards-buttons-right
+    = link_to image_tag("heart/pencil.png", :align => "right", :alt => "Edit", :title => "Edit"), edit_dashboard_path(dashboard)
+  .dashboards-top
+    .dashboard_title
+      = link_to dashboard.title, dashboard, :class => "button download-itunes"
+  .dashboards-bottom{:id => "miniflot#{dashboard.id}"}
+    - if Heart::Image.where(:dashboard_id => dashboard.id).exists?
+      <img src="#{Heart::Image.where(dashboard_id: dashboard.id).where(purpose: 'index').last.dataurl}"/>
+    - else
+      - charts = ActiveSupport::JSON.decode(dashboard.dashboard) rescue nil
+      - if charts.kind_of?(Array)
+        = hidden_field_tag "dashboard[]", charts[1][1], {:id => "miniflot#{dashboard.id}_form"}
+        - @reflots += "HEART.miniGraph({ target : '#miniflot#{dashboard.id}'}).draw({ serialized : $('#miniflot#{dashboard.id}_form').val(), image : true, dashboard_id : #{dashboard.id}});"
+        #{dashboard.description}

@@ -1,0 +1,12 @@
+%br
+.block
+  %h2.center
+    Metric Data Status
+  .clear
+    %hr
+      %h3.center
+        All Metrics
+    %hr
+  - @metrics.each do |metric|
+    .span-1.center.success
+      = link_to metric.dayofmonth.to_s, show_metric_path(:fulldate => metric.fulldate)

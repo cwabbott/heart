@@ -1,0 +1,25 @@
+%br
+.block
+  %h3
+    = link_to @metric.fulldate.to_s, show_metric_path(:fulldate => @metric.fulldate)
+  %small
+    = link_to "yesterday", show_metric_path(:fulldate => @metric.fulldate.yesterday)
+    <a onClick="javascript:$('#calendardiv').datepicker({dateFormat: 'yy-mm-dd', onSelect: function(dateText, inst) { $('#calendarlink').attr('href', '/metrics/'+dateText+'/show'); $('#calendarlink').text(dateText); document.location.href = '/metrics/'+dateText+'/show'; }})" id="calendarlink">calendar</a>
+    = link_to "tomorrow", show_metric_path(:fulldate => @metric.fulldate.tomorrow)
+    #calendardiv
+  %p{:class => ["thin","notice","center"]}
+    %span.large
+      = link_to "Fetch All", fetch_attribute_path(@metric.fulldate, :attribute => "all")
+  - @metric.attributes.sort.each do |name, value|
+    - next if ["id","created_at","updated_at","completed_at","fulldate"].include?(name)
+    .attribute{:class => [value.nil? && "error", !value.nil? && "success"]}
+      = name
+      - unless value.nil?
+        %span.value{:class => ("notice" unless value > 0)}
+          = value.to_s
+      - unless Metric.metadata.include?(name)
+        = link_to "fetch", fetch_attribute_path(@metric.fulldate, :attribute => name)
+        %span.small
+          [
+          = @isometric.send(name)
+          ]

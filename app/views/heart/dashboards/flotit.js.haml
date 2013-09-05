@@ -1,0 +1,6 @@
+{
+- @metrics.each do |x, metric_objects|
+  != flot_array(metric_objects)
+!= flot_annotations_array(@annotations)
+chart_description : "#{@description}",
+}
