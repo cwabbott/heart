@@ -1,7 +1,4 @@
-en:
-  login: "Log in with Google Apps"
-  dashboard_note: "*Changing options in <span class='red'>red</span> causes data to refresh."
-  def: "d"
+en_heart:
   wiki_confidence: "http://en.wikipedia.org/wiki/Confidence_interval"
   wiki_significance: "http://en.wikipedia.org/wiki/Statistically_significant"
   dashboards: "Dashboards"

@@ -1,0 +1,88 @@
+!!!
+%html
+  %head
+    %title
+      vBMetrics
+    = stylesheet_link_tag 'heart/bluetrip/css/screen.css', :media => 'screen, projection'
+    = stylesheet_link_tag 'heart/bluetrip/css/print.css', :media => 'print'
+    /[if IE]
+      = stylesheet_link_tag 'heart/bluetrip/css/ie.css', :media => 'screen, projection'
+    = stylesheet_link_tag 'heart/start/jquery-ui-1.8.7.custom.css', :media => 'screen, projection'
+    = stylesheet_link_tag 'heart/buttons.css', :media => :all
+    = stylesheet_link_tag 'heart/heart.css', :media => :all
+
+    = csrf_meta_tag
+    :javascript
+      //[JTGP == "Javascript the Good Parts"]
+      //[JTGP page25 "Global Abatement"]
+      var HEARTENGINE = function(){
+        return {
+          baseUrl : function(){
+            return "#{request.base_url}";
+          },
+          mountPoint : function(){
+            return HEARTENGINE.defaultPath().replace('/dashboards/default','');
+          },
+          defaultPath : function(){
+            return "#{url_for(controller: 'dashboards', action: 'default')}";
+          },
+          flotPath : function(){
+            return "#{url_for(controller: 'dashboards', action: 'flotit')}";
+          },
+          imagesPath : function(){
+            return "#{url_for(controller: 'images', action: 'create')}";
+          },
+          annotatePath : function(){
+            return "#{url_for(controller: 'annotations', action: 'create')}";
+          },
+          annotateDescriptionPath : function(){
+            return "#{url_for(controller: 'annotations', action: 'description')}";
+          }
+        };
+      }();
+    = javascript_include_tag 'heart/jquery-1-5-2.js'
+    = javascript_include_tag 'heart/jquery-ui-1.8.7.custom.min.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.symbols.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.navigate.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.stack.min.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.growing.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.fillbetween.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.pie.js'
+    = javascript_include_tag 'heart/flot/jquery.flot.resize.js'
+    = javascript_include_tag 'heart/jquery.betterTooltip.js'
+    = javascript_include_tag 'heart/application.js'
+    = javascript_include_tag 'heart/heart.js'
+    = javascript_include_tag 'heart/json2.js'
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  %body.positive
+    #menu_container
+      #menu
+        %ul.blue
+          %li{}
+            = link_to default_dashboards_path, :class => current_route?('dashboards#default') do
+              %span
+                = t(:all_metrics)
+          %li{}
+            = link_to dashboards_path, :class => current_route?('dashboards#index') do
+              %span
+                = t(:dashboards)
+      #logout.span-4.push-10.quiet
+        .span-4.last.right.fancy
+          %span.light
+            Metrics Updated:
+          %br
+          = Heart::Metric.where(:movingaverage => 0).order('fulldate DESC').first.try(:fulldate)
+    #container.container.contrast
+      .main-content
+        = yield
+        %br
+        %br
+      #footer.clear
+        %p.center
+          %a#lang_en{:href => '?lang=en'}<
+            = image_tag 'heart/us.png'
+          |
+          %a#lang_ja{:href => '?lang=ja'}><
+            = image_tag 'heart/jp.png'

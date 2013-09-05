@@ -1,0 +1,13 @@
+#clickdata
+  %fieldset.notice
+    %legend#annotation_legend
+      Add an Annotation
+    = form_tag(annotations_path) do
+      = hidden_field "annotation", "fulldate"
+      = hidden_field_tag "dashboard_id", @dashboard ? @dashboard.id : 0
+      = text_area "annotation", "note", :cols => 32, :rows => 3
+      %br
+      = button_to_function "Annotate", "HEART.annotate()"
+      %a.whisper{ :onclick => "$('#clickdata').hide();" }
+        cancel
+    %label#clickdatalabel

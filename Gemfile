@@ -1,41 +1,26 @@
-source 'http://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rails', '3.2.12'
-gem 'rake', '0.9.2.2'
-gem 'bcat', '0.6.2' # remove
+# Declare your gem's dependencies in heart.gemspec.
+# Bundler will treat runtime dependencies like base dependencies, and
+# development dependencies will be added by default to the :development group.
+gemspec
+
+# jquery-rails is used by the dummy application
+gem "jquery-rails"
+
+# Declare any dependencies that are still in development here instead of in
+# your gemspec. These might include edge Rails or gems from your path or
+# Git. Remember to move these dependencies to your gemspec before releasing
+# your gem to rubygems.org.
+
+# To use debugger
+# gem 'debugger'
+gem 'cucumber-rails', '1.3.0'
+gem 'capybara', '2.0.0.beta2'
+gem 'selenium-webdriver', '2.31.0'
+gem 'database_cleaner', '0.8.0'
+gem 'factory_girl_rails'
+gem 'zip'
 gem 'mysql2'
-gem 'haml', '3.1.4'
-gem 'nokogiri'
-gem 'capistrano', '~> 2.6'
-gem 'fastercsv'
-
-gem 'httparty', '0.8.3'
-gem 'json', '1.7.3'
-gem 'rack-test', '0.6.1'
-gem 'service_manager', '0.6.4'
-
-group :development, :test do
-  #gem 'sqlite3', '1.3.6'
-  gem 'rspec-rails', '2.11.0'
-  gem 'pry'
-  gem 'wirble'
-  gem 'hirb'
-  gem 'awesome_print'
-end
-
-platforms :ruby_19 do
-  gem 'ruby-debug19'
-end
-
-group :test do
-  gem 'aruba', '0.4.11'
-  gem 'cucumber-rails', '1.3.0'
-  gem 'childprocess', '0.3.4'
-  gem 'capybara', '2.0.0.beta2'
-  gem 'capybara-screenshot'
-  gem 'selenium-webdriver', '2.31.0'
-  gem 'launchy', '2.1.0'
-  gem 'database_cleaner', '0.8.0'
-  gem 'watchr'
-  gem 'factory_girl_rails'
-end
+gem 'rspec-rails', '~> 2.0'
+gem 'pry'

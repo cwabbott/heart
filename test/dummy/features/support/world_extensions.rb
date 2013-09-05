@@ -1,0 +1,1 @@
+system('bundle exec rake db:migrate:redo VERSION=20130902084029 RAILS_ENV=test')
