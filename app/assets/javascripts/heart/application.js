@@ -72,9 +72,34 @@ $(function(){
     return false;
   });
   $('.heart_set_zoom').click(function(){
-    HEART.set_set_zoom();
+    HEART.set_zoom();
     return false;
   });
+  $('#description_div').click(function(){
+    $('#description_div').hide();
+    $('#description_div_form').show();
+    return false;
+  });
+  $('#add_metric_link').click(function(){
+    $('#heart_form_metrics').toggle();
+    return false;
+  });
+});
+
+$("#heart_form_checkbox_hover_icon").mouseover(function() {
+    // .position() uses position relative to the offset parent, 
+    // so it supports position: relative parent elements
+    var pos = $(this).position();
+
+    // .outerWidth() takes into account border and padding.
+    var width = $(this).outerWidth();
+
+    //show the menu directly over the placeholder
+    $("#heart_form_checkbox_container").css({
+        position: "absolute",
+        top: pos.top + "px",
+        left: (pos.left + width) + "px"
+    }).show();
 });
 
 $(document).ready(function(){

@@ -8,12 +8,12 @@ end
 
 Then /^the page displays the interface in "(.*?)"$/ do |arg1|
   @language = arg1
-  page.should have_content(I18n.t(:measurements, :locale => "#{lang(arg1)}_heart"))
+  page.should have_content(I18n.t(:no_average, :locale => "#{lang(arg1)}_heart"))
 end
 
 Then /^reloading the dashboard page does not revert my language preference$/ do
   visit(default_dashboards_path)
-  page.should have_content(I18n.t(:measurements, :locale => "#{lang(@language)}_heart"))
+  page.should have_content(I18n.t(:no_average, :locale => "#{lang(@language)}_heart"))
 end
 
 def lang(option)

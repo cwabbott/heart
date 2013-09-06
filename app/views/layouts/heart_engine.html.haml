@@ -56,7 +56,7 @@
     = javascript_include_tag 'heart/json2.js'
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  %body.positive
+  %body
     #menu_container
       #menu
         %ul.blue
@@ -68,12 +68,11 @@
             = link_to dashboards_path, :class => current_route?('dashboards#index') do
               %span
                 = t(:dashboards)
-      #logout.span-4.push-10.quiet
-        .span-4.last.right.fancy
-          %span.light
-            Metrics Updated:
-          %br
-          = Heart::Metric.where(:movingaverage => 0).order('fulldate DESC').first.try(:fulldate)
+      #logout.span-15.push-2.quiet
+        .span-15.fancy.last.right
+          - if current_route?('dashboards#default')
+            Shareable Link:
+            <input type="text" id="linkto" value="" style="width:100px" class="whisper" onfocus="this.select()"/>
     #container.container.contrast
       .main-content
         = yield

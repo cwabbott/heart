@@ -91,7 +91,7 @@ function showTooltip(x, y, contents) {
         top: y + 5,
         left: x + 5,
         padding: '10px',
-				'line-height': '14px',
+				'line-height': '12px',
 				'text-shadow': '0px -1px 1px rgba(0, 0, 0, .8)',
 				'max-width': '240px',
 				color: 'white',

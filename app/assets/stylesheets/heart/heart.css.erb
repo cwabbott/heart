@@ -6,8 +6,8 @@ a.button, button {
 }
 /* end: a few bluetrip css framework resets, didnt like the tables in bluetrip */
 body {
-	background:#C7E7F4;
-	min-height:800px;
+	background: #222 !important;
+	/*min-height:800px;*/
 	padding:0px;
 	margin:0 0 0 0;
 }
@@ -17,50 +17,88 @@ body {
 .contrast {
 	background-color:#FFF;
 }
+#flotlegend_wrapper {
+  padding-left:30px;
+  min-height:51px;
+}
 #flotlegend table{
   background-color:#fff;
-  border:1px solid #ccc;
-}
-#flotlegend {
-  padding-left:30px;
 }
 #flotlegend .legendColorBox div{
   border:1px solid #666;
   background-color:#999;
 }
-#description_div.fancy{
+#flot_extra {
+  position: relative;
+  z-index: 1000;
+  top: 10px;
+  height: 0px;
+}
+#heart_form_date {
+  height:0px;
+  position:relative;
+  top:-45px;
+  left:500px;
+}
+#description_div{
   font-size:16px;
+  font-weight:bold;
   color:black;
   font-style:normal;
+  border: 1px dotted #f5f5f5;
+  min-height:12px;
 }
-#description_div p {
-  margin-bottom:0px;
+#description_div_form form{
+  font-size:12px;
+  color:black;
+  font-style:normal;
+  border: 1px dotted #f5f5f5;
+  min-height:12px;
+  margin:0px;
 }
 #container {
 	margin:0 auto;
-	border-left:1px solid #ccc;
-	border-bottom:1px solid #666;
-	border-right:1px solid #ccc;
-}
-.main_content {
-	margin:0;
 }
 #menu_container {
-	width:950px;
-	height:40px;
+	width:100%;
 	margin:0 auto 0 auto;
-	background-color:white;
-	border-bottom:1px solid #006699;
+  height: 40px;
+  background: url('<%= asset_path 'heart/header.png' %>') #f4f4f4 bottom repeat-x;
 }
 #menu {
 	width:950px;
 	margin:0 auto;
-	background-color:white;
-	border:1px solid #006699;
 }
-#logout {
-	padding-top:10px;
+#logout .span-15.fancy.last.right {
+margin-top: 5px;
 }
+#heart_form_checkbox_container {
+  background:white;
+}
+#heart_form_checkbox_container_button {
+	background: url('<%= asset_path 'heart/slider_button.png' %>' ) top left no-repeat transparent;
+	position: absolute;
+	top: -55px;
+	right: 20px;
+	width:50px;
+	height:50px;
+	border: none;
+	cursor: pointer;
+  border:3px solid red;
+}
+#heart_form_checkbox_container_content {
+	width: 100%;
+	height: 0px;
+	background: #251b15;
+	color: #CCCCCC;
+	font-size: 0.8em;
+	border: none;
+	font-family: DejaVuSansBook, Sans-Serif;
+}
+#heart_form_checkbox_container_text {
+	padding: 15px 10px 25px 25px;
+}
+
 .fancy_notice {
   color: #666;
   font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
@@ -270,9 +308,6 @@ acronym.trends {
 	text-align:center;
 }
 
-#clickdata {
-}
-
 .description {
   display:none;
 }
@@ -325,10 +360,6 @@ acronym.trends {
 	z-index: 5000;
 	background: transparent url('<%= asset_path 'heart/tooltip/tipTop280b.png' %>') no-repeat top;
 }
-.tip hr {
-	margin-bottom:4px;
-}
-.tipTitle {font:14px Tahoma, Verdana, sans-serif; color:white; position:relative; top: -22px; text-align:center;}
 .tipMid {background: transparent url('<%= asset_path 'heart/tooltip/tipMid280w.png' %>') repeat-y; padding: 0 25px 10px 25px;}
 .tipBtm {background: transparent url('<%= asset_path 'heart/tooltip/tipBtm280b.png' %>') no-repeat bottom; height: 32px;}
 
@@ -343,13 +374,9 @@ left: 0;
 display: none;
 background: #fff;
 border:1px solid #1DA3CA;
--moz-border-radius-bottomright: 10px;
--webkit-border-bottom-right-radius: 10px;
 width: 180px;
 height: auto;
 padding: 25px 5px 5px 30px;
-filter: alpha(opacity=85);
-opacity: .85;
 color:#000;
 height:99%;
 }
@@ -380,17 +407,14 @@ position: fixed;
 text-decoration: none;
 top: 0px;
 left: 0;
-font-size: 16px;
+font-size: 14px;
 letter-spacing:-1px;
 font-family: verdana, helvetica, arial, sans-serif;
-color:#fff;
+color:black;
 width:20px;
 font-weight: 700;
-/*background:#3875D7 url('../../images/heart/zoom.png') 85% 55% no-repeat;*/
-background:#3875D7 85% 55% no-repeat;
-border:1px solid #1DA3CA;
--moz-border-radius-topright: 10px;
--webkit-border-top-right-radius: 10px;
+background:#f5f5f5 85% 55% no-repeat;
+border:1px solid black;
 display: block;
 }
 #trigger.active{
@@ -426,40 +450,6 @@ padding: 5px 5px 5px 10px;
 .dashboard_index {
   background:#F5F5F5;
 }
-.a_b_report {
-  background:#fff;
-  width:100%;
-}
-.a_b_report tr.header {
-  text-transform:uppercase;
-  padding:0px;
-  line-height:12px;
-  font-size:12px;
-  font-weight:bold;
-  background:#438FDB;
-  color:white;
-  text-align:center;
-}
-.chart_a_b {
-  margin:auto auto 40px auto;
-  height:200px;
-}
-.chart_center {
-  position:relative;
-  width:60px;
-  height:60px;
-  z-index:1000;
-  margin-left:85px;
-  top:-145px;
-}
-.chart_center_text {
-  width:40px;
-  height:30px;
-  text-align:center;
-  margin:auto;
-  margin-top:20px;
-  font-size:28px
-}
 .indented {
   padding-left:15px;
 }
@@ -469,7 +459,6 @@ padding: 5px 5px 5px 10px;
 .heart_off {
   display:none;
 }
-
 .dashboard_title {
   margin:auto;
   width:112px;

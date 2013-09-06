@@ -1,10 +1,17 @@
+#heart_form_date.span-8.last
+  %span
+  - date_from_value ||= (params[:date_from].present?) ? params[:date_from] : 7.days.ago.to_date
+  <input type="text" name="date_from" id="date_from" class="date_from" size="10" value="#{date_from_value}" autocomplete="off"/>
+  %span
+    = t(:date_to)
+  - date_to_value ||= (params[:date_to].present?) ? params[:date_to] : 1.day.ago.to_date
+  <input type="text" name="date_to" id="date_to" class="date_to" size="10" value="#{date_to_value}" autocomplete="off"/>
+  <button class="download-itunes heart_flotgraph_draw" style="width:80px; float:right;">Graph</button>
 .span-21
   %table#heart_data_table.fancytable.left.hidden
-.span-5
+#heart_form_checkbox_container.span-20
   %fieldset
-    %legend
-      = t(:measurements)
-    .yspan-8.span-5.scrollable
+    .span-10.scrollable.yspan-4 
       - namespace = ""
       - Heart::Metric.columns.sort_by{ |c| I18n.t(c.name) }.each do |column|
         - next if ['date','datetime', 'time'].include?(column.type.downcase) or Heart::Metric.metadata.include?(column.name) or Heart::Metric.groupbydata.include?(column.name)
@@ -20,81 +27,56 @@
             = check_box_helper "measurement[]", column.name, {:class => "measurements"}
             %label{:for => "measurement_#{column.name}"}
               = t(column.name)
-.span-5.prefix-1
-  .yspan-8.span-5.last.clear
-    %fieldset
-      %legend
-        = t(:average)
-      .yspan-4.span-5.scrollable.last
-        = check_box_helper "movingaverage[]", "0", {:class => "movingaverages"}
-        %label{:for => "movingaverage_0" }
-          = t(:no_average)
-        %br
-        = check_box_helper "movingaverage[]", "7", {:class => "movingaverages"}
-        %label{:for => "movingaverage_7" }
-          = t("7day")
-        %br
-        = check_box_helper "movingaverage[]", "30", {:class => "movingaverages"}
-        %label{:for => "movingaverage_30" }
-          = t("30day")
-        %br
-        = check_box_helper "movingaverage[]", "90", {:class => "movingaverages"}
-        %label{:for => "movingaverage_90" }
-          = t("90day")
-    %fieldset
-      %legend
-        = t(:special)
-      .yspan-2.scrollable.span-5.last
-        <input type="checkbox" name="yearly_stacked" value="1" id="yearly_stacked" onChange="if($('#yearly_stacked').attr('checked')){ $('.annotations').attr('checked', false); }"/>
-        Stack Years
-        - if params[:review] && params[:yearly_stacked]
-          <script>
-          $("#yearly_stacked").attr("checked", true);
-          </script>
-        %br
-        <input type="checkbox" name="tsv_export" value="1" id="tsv_export" />
-        Export
-        %br
-        = check_box_helper "annotate[]", "0", {:class => "annotations", :onChange => "if($('#yearly_stacked').attr('checked')){ $('#yearly_stacked').attr('checked', false);}"}
-        %label{:for => "annotate_0" }
-          = t(:annotations_public)
-        <input type="checkbox" name="description" class="description" id="description" value="#{params[:description]}" checked="checked" />
-.span-3.prefix-1.last{:style => "padding-top:15px;"}
-  %br
-  <button class="download-itunes heart_flotgraph_draw" style="width:80px">Graph</button>
-  %br
-  %br
-  %span
-    = t(:date_from)
-  %br
-  - date_from_value ||= (params[:date_from].present?) ? params[:date_from] : 7.days.ago.to_date
-  <input type="text" name="date_from" id="date_from" class="date_from" size="10" value="#{date_from_value}" autocomplete="off"/>
-  %br
-  %div
-    %span
-      = t(:date_to)
-    - date_to_value ||= (params[:date_to].present?) ? params[:date_to] : 1.day.ago.to_date
-    <input type="text" name="date_to" id="date_to" class="date_to" size="10" value="#{date_to_value}" autocomplete="off"/>
-  %div
-    = t(:group_by)
-    %br
-    = check_box_helper "method", "sum", {:class => "method"}
-    %label{:for => "method_sum" }
-      SUM()
-    %br
-    = check_box_helper "groupby[]", "dayofweek", {:class => "groupby"}
-    %label{:for => "groupby_dayofweek" }
-      = t(:weekday)
-    %br
-    = check_box_helper "groupby[]", "weekofyear", {:class => "groupby"}
-    %label{:for => "groupby_weekofyear" }
-      = t(:week)
-    %br
-    = check_box_helper "groupby[]", "monthofyear", {:class => "groupby"}
-    %label{:for => "groupby_monthofyear" }
-      = t(:month)
-    %br
-    = check_box_helper "groupby[]", "year", {:class => "groupby"}
-    %label{:for => "groupby_year" }
-      = t(:year)
-    %br
+    .span-3.yspan-4
+      = check_box_helper "movingaverage[]", "0", {:class => "movingaverages"}
+      %label{:for => "movingaverage_0" }
+        = t(:no_average)
+      %br
+      = check_box_helper "movingaverage[]", "7", {:class => "movingaverages"}
+      %label{:for => "movingaverage_7" }
+        = t("7day")
+      %br
+      = check_box_helper "movingaverage[]", "30", {:class => "movingaverages"}
+      %label{:for => "movingaverage_30" }
+        = t("30day")
+      %br
+      = check_box_helper "movingaverage[]", "90", {:class => "movingaverages"}
+      %label{:for => "movingaverage_90" }
+        = t("90day")
+    .span-3.yspan-4
+      = t(:group_by)
+      %br
+      = check_box_helper "method", "sum", {:class => "method"}
+      %label{:for => "method_sum" }
+        SUM()
+      %br
+      = check_box_helper "groupby[]", "dayofweek", {:class => "groupby"}
+      %label{:for => "groupby_dayofweek" }
+        = t(:weekday)
+      %br
+      = check_box_helper "groupby[]", "weekofyear", {:class => "groupby"}
+      %label{:for => "groupby_weekofyear" }
+        = t(:week)
+      %br
+      = check_box_helper "groupby[]", "monthofyear", {:class => "groupby"}
+      %label{:for => "groupby_monthofyear" }
+        = t(:month)
+      %br
+      = check_box_helper "groupby[]", "year", {:class => "groupby"}
+      %label{:for => "groupby_year" }
+        = t(:year)
+    .span-3.yspan-4.last
+      <input type="checkbox" name="yearly_stacked" value="1" id="yearly_stacked" onChange="if($('#yearly_stacked').attr('checked')){ $('.annotations').attr('checked', false); }"/>
+      Stack Years
+      - if params[:review] && params[:yearly_stacked]
+        <script>
+        $("#yearly_stacked").attr("checked", true);
+        </script>
+      %br
+      <input type="checkbox" name="tsv_export" value="1" id="tsv_export" />
+      Export
+      %br
+      = check_box_helper "annotate[]", "0", {:class => "annotations", :onChange => "if($('#yearly_stacked').attr('checked')){ $('#yearly_stacked').attr('checked', false);}"}
+      %label{:for => "annotate_0" }
+        = t(:annotations_public)
+      <input type="checkbox" name="description" class="description" id="description" value="#{params[:description]}" checked="checked" />
