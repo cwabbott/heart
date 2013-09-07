@@ -14,7 +14,9 @@
     #flot.span-22.yspan-10
     = render 'annotation'
   #flotlegend_wrapper.span-13.light-contrast
-    #flotlegend.right
+    #flotlegend
+      .flotlegend_note.fancy
+        Choose a metric from below and hit the graph button.
   .span-21.prefix-1.last
     = form_tag(dashboards_path, :id => 'heartform', :autocomplete => 'off') do
       = hidden_field_tag 'dashboard_id', @dashboard ? @dashboard.id : 0, {:id => 'dashboard_id'}

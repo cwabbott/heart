@@ -10,8 +10,11 @@
 .span-21
   %table#heart_data_table.fancytable.left.hidden
 #heart_form_checkbox_container.span-20
-  %fieldset
-    .span-10.scrollable.yspan-4 
+  .span-10.yspan-4
+    .fancy
+      = t(:metrics)
+      %hr
+    .span-10.yspan-4.scrollable 
       - namespace = ""
       - Heart::Metric.columns.sort_by{ |c| I18n.t(c.name) }.each do |column|
         - next if ['date','datetime', 'time'].include?(column.type.downcase) or Heart::Metric.metadata.include?(column.name) or Heart::Metric.groupbydata.include?(column.name)
@@ -27,6 +30,13 @@
             = check_box_helper "measurement[]", column.name, {:class => "measurements"}
             %label{:for => "measurement_#{column.name}"}
               = t(column.name)
+      - if namespace.empty?
+        .fancy
+          Woops! Looks like you haven't added any metrics yet.
+  .span-9.yspan-4.last
+    .fancy
+      Options
+      %hr
     .span-3.yspan-4
       = check_box_helper "movingaverage[]", "0", {:class => "movingaverages"}
       %label{:for => "movingaverage_0" }
@@ -46,10 +56,6 @@
     .span-3.yspan-4
       = t(:group_by)
       %br
-      = check_box_helper "method", "sum", {:class => "method"}
-      %label{:for => "method_sum" }
-        SUM()
-      %br
       = check_box_helper "groupby[]", "dayofweek", {:class => "groupby"}
       %label{:for => "groupby_dayofweek" }
         = t(:weekday)
@@ -66,15 +72,21 @@
       %label{:for => "groupby_year" }
         = t(:year)
     .span-3.yspan-4.last
+      = check_box_helper "method", "sum", {:class => "method"}
+      %label{:for => "method_sum" }
+        SUM()
+      %br
       <input type="checkbox" name="yearly_stacked" value="1" id="yearly_stacked" onChange="if($('#yearly_stacked').attr('checked')){ $('.annotations').attr('checked', false); }"/>
-      Stack Years
+      %label{:for => 'yearly_stacked'}
+        Stack Years
       - if params[:review] && params[:yearly_stacked]
         <script>
         $("#yearly_stacked").attr("checked", true);
         </script>
       %br
       <input type="checkbox" name="tsv_export" value="1" id="tsv_export" />
-      Export
+      %label{:for => 'tsv_export'}
+        Export
       %br
       = check_box_helper "annotate[]", "0", {:class => "annotations", :onChange => "if($('#yearly_stacked').attr('checked')){ $('#yearly_stacked').attr('checked', false);}"}
       %label{:for => "annotate_0" }

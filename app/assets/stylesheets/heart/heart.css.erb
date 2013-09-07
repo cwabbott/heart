@@ -12,7 +12,9 @@ body {
 	margin:0 0 0 0;
 }
 #footer {
-	padding-top:20px;
+  border-top:1px solid #ccc;
+	padding-top:5px;
+  background: url('<%= asset_path 'heart/footer_background.jpg' %>') #f4f4f4 bottom repeat;
 }
 .contrast {
 	background-color:#FFF;
@@ -27,6 +29,9 @@ body {
 #flotlegend .legendColorBox div{
   border:1px solid #666;
   background-color:#999;
+}
+.flotlegend_note{
+  padding-top:12px;
 }
 #flot_extra {
   position: relative;
