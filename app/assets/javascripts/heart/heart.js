@@ -122,6 +122,11 @@ var HEART = function(){
     },
 
     image : function(){
+      HEART.flotGraph(
+        {
+          flotoptions: { legend: { noColumns: 3, show: true, showOnCanvas: true, position: 'nw'} }
+        }
+      ).draw();
       dashboard_id = $('#dashboard_id').val();
       result = $.ajax({
         type : "POST",
@@ -143,6 +148,7 @@ var HEART = function(){
           'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
         },
       });
+      HEART.flotGraph().draw();
     },
     
     tsv : function(){
@@ -289,7 +295,7 @@ var HEART = function(){
     //
     flotGraph : function(spec){
       var spec = spec || {};
-      spec.flotoptions = {
+      var flotoptions = {
         colors: ["#FF8300", "#06799F", "#FF2800", "#9440ed","#C3F500"],
         xaxis: { mode: "time", reserveSpace: null},
         xaxes: [{ },
@@ -323,6 +329,9 @@ var HEART = function(){
         lines : { show : HEART.get_lines(), fill : HEART.get_fill() },
         points : { show : HEART.get_points() },
       };
+      
+      jQuery.extend(flotoptions, spec.flotoptions);
+      spec.flotoptions = flotoptions;
 
       var that = this.graph(spec);
 

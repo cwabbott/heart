@@ -87,7 +87,7 @@ $(function(){
 });
 
 $(document).ready(function(){
-  $('.tTip').betterTooltip();
+  $('[title]').colorTip({color:'yellow', timeout:25});
   $('#clickdata').hide();
   $(function() {
       if($("#date_from").length){
