@@ -72,13 +72,22 @@ $(function(){
     return false;
   });
   $('.heart_set_zoom').click(function(){
-    HEART.set_set_zoom();
+    HEART.set_zoom();
+    return false;
+  });
+  $('#description_div').click(function(){
+    $('#description_div').hide();
+    $('#description_div_form').show();
+    return false;
+  });
+  $('#add_metric_link').click(function(){
+    $('#heart_form_metrics').toggle();
     return false;
   });
 });
 
 $(document).ready(function(){
-  $('.tTip').betterTooltip();
+  $('[title]').colorTip({color:'yellow', timeout:25});
   $('#clickdata').hide();
   $(function() {
       if($("#date_from").length){

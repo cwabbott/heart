@@ -77,7 +77,6 @@ var HEART = function(){
 
     description : function(bool_remove){
       var remove = bool_remove || false;
-      console.log(remove);
       if(!remove){
         $.ajax({
           type : "POST",
@@ -87,7 +86,9 @@ var HEART = function(){
           data : { 'fulldate': '2999-12-31', 'note': $('#custom_description').val(), 'date_from': '2999-12-31', 'date_to': '2999-12-31' },
           success : function(res){
             if(typeof(chart_description) != 'undefined' && chart_description != ""){
-              $('#description_div').html("<img src='"+HEARTENGINE.mountPoint()+"/images/bluestar.png' align='left' width='16px' onclick='HEART.description(false)'/> &nbsp; " + chart_description);
+              $('#description_div').html(chart_description);
+              $('#description_div').show();
+              $('#description_div_form').hide();
             }
             HEART.link();
           },
@@ -121,6 +122,11 @@ var HEART = function(){
     },
 
     image : function(){
+      HEART.flotGraph(
+        {
+          flotoptions: { legend: { noColumns: 3, show: true, showOnCanvas: true, position: 'nw'} }
+        }
+      ).draw();
       dashboard_id = $('#dashboard_id').val();
       result = $.ajax({
         type : "POST",
@@ -142,6 +148,7 @@ var HEART = function(){
           'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
         },
       });
+      HEART.flotGraph().draw();
     },
     
     tsv : function(){
@@ -288,7 +295,7 @@ var HEART = function(){
     //
     flotGraph : function(spec){
       var spec = spec || {};
-      spec.flotoptions = {
+      var flotoptions = {
         colors: ["#FF8300", "#06799F", "#FF2800", "#9440ed","#C3F500"],
         xaxis: { mode: "time", reserveSpace: null},
         xaxes: [{ },
@@ -299,22 +306,7 @@ var HEART = function(){
         yaxis: { min: 0 },
         grid: { backgroundColor: { colors: ["#fff", "#fff"] }, hoverable: true, clickable: true },
         legend: { noColumns: 3, container: $('#flotlegend, .legend'), labelBoxBorderColor: null, show: true, labelFormatter: function(label, series) {
-            // series is the series object for the label
-            if(label.substring(label.length -1) == "]"){
-              if(label.substring(label.length -4) == "999]"){
-                return "forecast";
-              }else if(label.substring(label.length -4) == "998]"){
-                return ".";
-              }else if(label.substring(label.length -4) == "888]"){
-                return "target";
-              }else if(label.substring(label.length -4) == "666]"){
-                return "significance";
-              }else{
-                return label.substring(label.indexOf('['));
-              }
-            }else{
-              return "<a onclick=\"$('#measurement_" + series.att_name + "').attr('checked', false); HEART.flotGraph().draw(); return false;\">" + label + "</a>";
-            }
+            return "<a onclick=\"$('#measurement_" + series.att_name + "').attr('checked', false); HEART.flotGraph().draw(); return false;\">" + label + "</a>";
           } },
         series: { 
           stack: HEART.get_stack(),
@@ -337,6 +329,9 @@ var HEART = function(){
         lines : { show : HEART.get_lines(), fill : HEART.get_fill() },
         points : { show : HEART.get_points() },
       };
+      
+      jQuery.extend(flotoptions, spec.flotoptions);
+      spec.flotoptions = flotoptions;
 
       var that = this.graph(spec);
 
@@ -574,7 +569,7 @@ var HEART = function(){
         }
         if(typeof(HEART.cacheRead(cache_index)["chart_description"]) != 'undefined'){
           if(HEART.cacheRead(cache_index)["chart_description"] != ""){
-            $('#description_div').html("<p class='notice'><img src='"+HEARTENGINE.mountPoint()+"/images/bluestar.png' align='right' width='16px' /><img src='"+HEARTENGINE.mountPoint()+"/images/bluestar.png' align='left' width='16px' onclick='HEART.description(true)'/>&nbsp;" + HEART.cacheRead(cache_index)["chart_description"] + "</p>");
+            $('#description_div').html(HEART.cacheRead(cache_index)["chart_description"]);
           }else{
             $('#description_div').html("");
           }

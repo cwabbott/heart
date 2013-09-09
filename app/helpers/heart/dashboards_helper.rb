@@ -20,7 +20,7 @@ module Heart
     end
 
     def tool_tip(options)
-      "<div class='tipTitle'>#{options[:title]}</div>#{options[:content]}<br /><br /><hr /><div class='center caps'>#{options[:subtitle]}</div>#{options[:footer]}"
+      "#{options[:content]}"
     end
   
     def to_flot_time(date)
