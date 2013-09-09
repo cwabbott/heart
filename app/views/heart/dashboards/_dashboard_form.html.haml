@@ -2,15 +2,13 @@
   %fieldset
     = hidden_field_tag "dashboard_id", @dashboard ? @dashboard.id : 0, {:id => "dashboard_id"}
     = hidden_field_tag "dashboards", '', {:id => "dashboards"}
-    %legend
-      %span{:id => "legend"}
     .span-22.last
       #overlay.black_overlay
       #loadingGif.overlay_content.fancy
         Loading...
       #description_div.span-20.suffix-1.prefix-1.fancy
       #flot.flot.span-22.yspan-10
-    #flotlegend.span-21.light-contrast
+    #flotlegend.span-13.light-contrast
     .span-21.prefix-1.last
       = render "heart_form"
 .span-16.last

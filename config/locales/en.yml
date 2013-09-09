@@ -18,7 +18,7 @@ en_heart:
   90day: "90 day"
   365day: "365 day"
   date_from: "Date from"
-  date_to: "Date to"
+  date_to: "- to -"
   group_by: "SQL Group By"
   weekday: Weekday
   week: Week
