@@ -1,3 +1,44 @@
-= Heart
+# HEART
 
-This project rocks and uses MIT-LICENSE.
+SEE the markdown README.md for the most up to date documentation.
+
+## You
+- Want to quickly start tracking important daily metrics
+- Have access to your data for generating metrics
+- Don't want to dally around with excel, would prefer to automate the presentation and amalgamation of metric data
+- Might like to share your metric definitions across projects, keep things separated and reusable
+
+## Install
+Add the gem to your gemfile:
+```
+gem 'heart', '~> 0.0.1'
+```
+
+[Optional] Add any other gems to your gemfile for prepackaged HEART metrics if applicable:
+```
+gem 'heart_vbulletin4', '~> 0.0.1'
+```
+
+Bundle, then migrate:
+```
+bundle install
+bundle exec rake db:migrate
+```
+That will setup the HEART database tables, and add metrics for any prepackaged HEART metric gem that you might have installed.
+
+Mount the engine on some path, by editing your routes.rb file and adding:
+```ruby
+mount Heart::Engine => "/heart", as: 'heart_engine'
+```
+Now, when you startup your local server and access /heart you'll be greeted by the heart main page.
+
+### Rails 4
+Currently, need to add ```gem 'protected_attributes'``` and ```gem 'haml', '~> 4.0'``` to your gemfile for rails 4 support.
+
+## Creating your own custom metrics
+The real simplicity of this gem comes from the ease in which you can create and isolate your own custom metrics into gems to share between projects. You can start by creating the metrics locally, in your project, then easily move them into a gem if you plan on sharing them with other people / projects.
+
+
+## TODO
+1. Support non-MySQL databases
+2. Officially support Rails 4
