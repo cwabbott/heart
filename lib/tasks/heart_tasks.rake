@@ -3,28 +3,31 @@ namespace :heart do
     
     desc "Fetches all metrics for a particular date"
     task :fetch_all => :environment do
-      unless ENV.include?("fulldate")
-        raise "usage: rake metrics:fetch_all fulldate=2011-01-01"
+      unless ENV.include?("todate")
+        raise "usage: rake heart:metrics:fetch_all fromdate=2011-01-01 todate=2011-01-30"
       end
-      fulldate = Date.parse(ENV['fulldate'])
-      metric = Metric.find_or_create(fulldate,0)
-      metric.fetch_all
+      todate = Date.parse(ENV['todate'])
+      fromdate = Date.parse(ENV['fromdate'])
+      fromdate.upto(todate) do |date|
+        metric = Heart::Metric.find_or_create(date,0)
+        metric.fetch_all
+      end
     end
 
     desc "Fetch a specific metric for all days between dates"
     task :fetch_between => :environment do
-      unless ENV.include?("fulldate") && ENV.include?("fromdate") && ENV.include?("metric")
-        raise "usage: rake metrics:fetch_between fulldate=2011-01-01 fromdate=2010-12-01 metric=metricName"
+      unless ENV.include?("todate") && ENV.include?("fromdate") && ENV.include?("metric")
+        raise "usage: rake heart:metrics:fetch_between todate=2011-01-01 fromdate=2010-12-01 metric=metricName"
       end
-      fulldate = Date.parse(ENV['fulldate'])
+      todate = Date.parse(ENV['todate'])
       fromdate = Date.parse(ENV['fromdate'])
       metric_name = ENV['metric']
       method = "fetch_" + metric_name.to_s
 
-      fromdate.upto(fulldate) do |date|
+      fromdate.upto(todate) do |date|
         #first for the global metrics / all users
-        metric = Metric.find_or_create(date,0)
-        isometric = Isometric.find_or_create(date,0)
+        metric = Heart::Metric.find_or_create(date,0)
+        isometric = Heart::Isometric.find_or_create(date,0)
 
         metric.send(method)
 
@@ -36,17 +39,17 @@ namespace :heart do
 
     desc "Fetch metrics that were not previously fetched between specific dates."
     task :fetch_missing => :environment do
-      unless ENV.include?("fulldate") && ENV.include?("fromdate")
-        raise "usage: rake metrics:fetch_missing fulldate=2011-01-01 fromdate=2010-12-01"
+      unless ENV.include?("todate") && ENV.include?("fromdate")
+        raise "usage: rake heart:metrics:fetch_missing todate=2011-01-01 fromdate=2010-12-01"
       end
-      fulldate = Date.parse(ENV['fulldate'])
+      todate = Date.parse(ENV['todate'])
       fromdate = Date.parse(ENV['fromdate'])
-      fromdate.upto(fulldate) do |date|
+      fromdate.upto(todate) do |date|
         missing_metrics = []
-        isometric = Isometric.where("fulldate = ? and movingaverage = 0", date).first
+        isometric = Heart::Isometric.where("fulldate = ? and movingaverage = 0", date).first
         isometric.attributes.each { |key,value| missing_metrics.push(key) if value.nil? }
 
-        metric = Metric.where("fulldate = ? and movingaverage = 0", date).first
+        metric = Heart::Metric.where("fulldate = ? and movingaverage = 0", date).first
         missing_metrics.each do |missing|
           fetch_method = "fetch_#{missing}"
           if metric.respond_to?(fetch_method)
@@ -67,14 +70,14 @@ namespace :heart do
     
     desc "Cache a moving average for a range of dates"
     task :moving_average => :environment do
-      unless ENV.include?("fulldate") && ENV.include?("fromdate") && ENV.include?("average")
-        raise "usage: rake metrics:moving_average fulldate=2011-01-01 fromdate=2010-12-01 average=30"
+      unless ENV.include?("todate") && ENV.include?("fromdate") && ENV.include?("average")
+        raise "usage: rake heart:metrics:moving_average todate=2011-01-01 fromdate=2010-12-01 average=30"
       end
-      fulldate = Date.parse(ENV['fulldate'])
+      todate = Date.parse(ENV['todate'])
       fromdate = Date.parse(ENV['fromdate'])
       movingaverage = (ENV['average'].nil?) ? 30 : ENV['average'].to_i
-      fromdate.upto(fulldate) do |date|
-        metric = Metric.find_or_create(date,movingaverage)
+      fromdate.upto(todate) do |date|
+        metric = Heart::Metric.find_or_create(date,movingaverage)
         metric.save!
         metric.moving_averages!(movingaverage)
         metric.save

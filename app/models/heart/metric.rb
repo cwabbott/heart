@@ -46,7 +46,7 @@ module Heart
     end
 
     def self.recently_added(average=0)
-      Metric.where("movingaverage = ?", average).order("fulldate DESC").limit(3)
+      Heart::Metric.where("movingaverage = ?", average).order("fulldate DESC").limit(3)
     end
 
     def self.find_or_create(date,average)
@@ -55,20 +55,23 @@ module Heart
     end
 
     def fetch_all
-      isometric = Isometric.find_or_create(self.fulldate,0)
+      isometric = Heart::Isometric.find_or_create(self.fulldate,0)
       self.methods.each do |x|
         begin
           if /^fetch_/.match(x.to_s)
             dont_fetch = ["fetch_all"]
-            next if dont_fetch.include?(x)
+            next if dont_fetch.include?(x.to_s)
             puts "fetching #{x}"
             self.send(x)
             attribute = x.split(/_/)
             isometric.send(attribute[1]+"=", Time.now)
+            self.save
+            isometric.save
           end
-          self.save
-          isometric.save
-        rescue e
+        rescue RuntimeError => e
+          puts e.message
+          puts e.backtrace.inspect
+        rescue NoMethodError => e
           puts e.message
           puts e.backtrace.inspect
         end

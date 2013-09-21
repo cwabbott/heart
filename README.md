@@ -56,32 +56,31 @@ The real simplicity of HEART comes from the ease in which you can create and iso
 1. Create a 'fetch' directory inside lib
 2. Create a module in your lib directory to encase your metric definitions. All metric definitions can leverage the special fulldate method to allow HEART to pass in the current date it is trying to aggregate. It should look like this
   ```
-  module Fetch
-    module Myforum
-      def fetch_myforumPostsNew
-        Myforum::Post.where(posted_at: Time.parse("#{fulldate} 00:00:00")..Time.parse("#{fulldate} 23:59:59"))
+    module Fetch
+      module Myforum
+        def fetch_myforumPostsNew
+          Myforum::Post.where(posted_at: Time.parse("#{fulldate} 00:00:00")..Time.parse("#{fulldate} 23:59:59"))
+        end
       end
     end
-  end
   ```
-  ![developers note][0] All fetch methods must be prefixed with "fetch" followed by an underscore for HEART to find them. CamelCasing is the current standard for metric names after the "fetch". HEART takes the metric name from the database (e.g., "myforumPostsNew") and looks for a translation in your locales to pretty it up.
 3. Create a migration to add your metric to HEART's database tables. Move the migration file into the same directory as your fetch module. E.g., this file named 2013092100000123_add_posts_new_to_heart.rb is placed in the /lib/fetch/ directory with the module created in step 2
 
   ```
-  class AddPostsNewToHeartMetrics < ActiveRecord::Migration
-    def change
-      add_column :heart_metrics, :myforumPostsNew, :integer
-      add_column :heart_isometrics, :myforumPostsNew, :datetime
+    class AddPostsNewToHeartMetrics < ActiveRecord::Migration
+      def change
+        add_column :heart_metrics, :myforumPostsNew, :integer
+        add_column :heart_isometrics, :myforumPostsNew, :datetime
+      end
     end
-  end
   ```
 4. Run your migrations. HEART will automatically include the migration files in your lib/fetch directory and its subdirectories (so you can arrange them in sub-folders however you like)
 5. Aggregate your metric data into HEART's tables.
   ```
-  bundle exec rake metric:fetch:all
+  bundle exec rake heart:metrics:fetch_all fromdate=2013-09-01 todate=2013-09-03
   ```
 
-
+![developers note][0] All fetch methods must be prefixed with "fetch" followed by an underscore for HEART to find them. CamelCasing is the current standard for metric names after the "fetch". HEART takes the metric name from the database (e.g., "myforumPostsNew") and looks for a translation in your locales to pretty it up.
 
 ### TODO
 1. Support non-MySQL databases
