@@ -16,9 +16,10 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 3.2.14'
+  s.add_dependency 'rails', '>= 3.2.0'
   s.add_dependency 'haml', ['>= 3.0.0']
   s.add_dependency 'i18n'
+  s.add_dependency 'mysql2'
 
   s.add_development_dependency 'cucumber-rails', '~> 1.3.0'
   s.add_development_dependency 'capybara', '2.0.0.beta2'

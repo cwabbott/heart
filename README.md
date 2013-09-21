@@ -31,12 +31,22 @@ mount Heart::Engine => "/heart", as: 'heart_engine'
 Now, when you startup your local server and access /heart you'll be greeted by the heart main page.
 
 ### Rails 4
-Currently, need to add ```gem 'protected_attributes'``` and ```gem 'haml', '~> 4.0'``` to your gemfile for rails 4 support.
+Currently, need to add 
+```
+gem 'protected_attributes'``` 
+gem 'haml', '~> 4.0'
+``` 
+to your gemfile for rails 4 support.
 
 ## Creating your own custom metrics
-The real simplicity of this gem comes from the ease in which you can create and isolate your own custom metrics into gems to share between projects. You can start by creating the metrics locally, in your project, then easily move them into a gem if you plan on sharing them with other people / projects.
+The real simplicity of HEART gem comes from the ease in which you can create and isolate your own custom metrics into gems to share between projects. You can start by creating the metrics locally, in your project, then easily move them into a gem if you plan on sharing them with other people / projects.
 
 
 ## TODO
 1. Support non-MySQL databases
-2. Officially support Rails 4
+2. Remove protected_attributes requirement for support Rails 4
+
+
+
+
+
