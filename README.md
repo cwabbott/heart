@@ -56,11 +56,14 @@ The real simplicity of HEART comes from the ease in which you can create and iso
 1. Create a 'fetch' directory inside lib
 2. Create a module in your lib directory to encase your metric definitions. All metric definitions can leverage the special fulldate method to allow HEART to pass in the current date it is trying to aggregate. It should look like this
 
-  ```
+  ```ruby
     module Fetch
       module Myforum
+        # define a "fetch_camelCaseMetricName" method for your metric
+        # recommend that you prefix your metric with the name of your module (e.g., myforum)
         def fetch_myforumPostsNew
-          Myforum::Post.where(posted_at: Time.parse("#{fulldate} 00:00:00")..Time.parse("#{fulldate} 23:59:59"))
+          # set the myforumPostsNew attribute to some value, HEART will automatically save it
+          self.myforumPostsNew = Myforum::Post.where(posted_at: Time.parse("#{fulldate} 00:00:00")..Time.parse("#{fulldate} 23:59:59")).count
         end
       end
     end

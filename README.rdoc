@@ -1,5 +1,7 @@
 # HEART
 
+SEE the markdown README.md for the most up to date documentation.
+
 ## You
 - Want to quickly start tracking important daily metrics
 - Have access to your data for generating metrics
