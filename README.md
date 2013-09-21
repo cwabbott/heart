@@ -55,6 +55,7 @@ The real simplicity of HEART comes from the ease in which you can create and iso
 
 1. Create a 'fetch' directory inside lib
 2. Create a module in your lib directory to encase your metric definitions. All metric definitions can leverage the special fulldate method to allow HEART to pass in the current date it is trying to aggregate. It should look like this
+
   ```
     module Fetch
       module Myforum
