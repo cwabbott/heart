@@ -27,6 +27,8 @@ Inspiration for the original project, that eventually led to this open-source ge
 
 
 # How to Install?
+Watch this 11 minute video that shows how quick it is to go from a new rails app to graphing time-series data: http://youtu.be/iiYxqUeyAiQ
+
 Add the gem to your gemfile:
 ```
 gem 'heart', '~> 0.0.1'
