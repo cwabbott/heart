@@ -102,9 +102,9 @@ The real simplicity of HEART comes from the ease in which you can create and iso
   ```
 8. Add translations for your new metric(s). In the config/locales/en.yml add your translations under "en_heart". Translate both your metric and your module's name (which you hopefully prefixed with your module name) like the following:
   ```yaml
-  en_heart:
-   myforum: "My Forum"
-   myforumPostsNew: "New Posts"
+    en_heart:
+      myforum: "My Forum"
+      myforumPostsNew: "New Posts"
   ```
   
 ![developers note][0] All fetch methods must be prefixed with "fetch" followed by an underscore for HEART to find them. HEART takes the metric name from the database (e.g., "myforumPostsNew") and looks for a translation in your locales to pretty it up.
