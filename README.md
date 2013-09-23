@@ -54,7 +54,7 @@ gem 'haml', '~> 4.0'
 The real simplicity of HEART comes from the ease in which you can create and isolate your own custom metrics to share between projects. Here's an example on how to add a metric to track the number of new posts in our imaginary forum which is written in Ruby on Rails (the same project we have the gem installed in):
 
 1. Create a 'fetch' directory inside lib
-2. Create a module in your lib directory to encase your metric definitions. All metric definitions can leverage the special fulldate method to allow HEART to pass in the current date it is trying to aggregate. It should look like this
+2. Create a module in your lib directory to encase your metric definitions. It should look like the following example. (Note: _All metric definitions can leverage the special fulldate method to allow HEART to pass in the current date it is trying to aggregate._ )
 
   ```ruby
     module Fetch
@@ -68,7 +68,7 @@ The real simplicity of HEART comes from the ease in which you can create and iso
       end
     end
   ```
-3. Create a migration to add your metric to HEART's database tables. Move the migration file into the same directory as your fetch module. E.g., this file named 2013092100000123_add_posts_new_to_heart.rb is placed in the /lib/fetch/ directory with the module created in step 2
+3. Create a migration to add your metric to HEART's database tables. Move the migration file into the same directory as your fetch module. E.g., this file named 2013092100000123_add_posts_new_to_heart.rb is placed in the /lib/fetch/ directory with the module created in step 2. (Note: _All metrics need to migrate 2 tables 'heart_metrics' and 'heart_isometrics'. The heart_metrics field can be any type of integer, double, float; the heart_isometrics field must be a of type datetime. HEART uses the heart_isometrics field internally to track the datetime that a particular metric's value was last aggregated, while the heart_metrics field is used to store the actual daily values._ )
 
   ```
     class AddPostsNewToHeartMetrics < ActiveRecord::Migration
@@ -79,12 +79,20 @@ The real simplicity of HEART comes from the ease in which you can create and iso
     end
   ```
 4. Run your migrations. HEART will automatically include the migration files in your lib/fetch directory and its subdirectories (so you can arrange them in sub-folders however you like)
-5. Aggregate your metric data into HEART's tables.
+5. Aggregate your metric data into HEART's tables with the following rake task. This taks will attempt to fetch and update all metric values between and including the dates you specify. Protip: call this command daily via a cron job to automatically aggregate all your metric data.
   ```
   bundle exec rake heart:metrics:fetch_all fromdate=2013-09-01 todate=2013-09-03
   ```
+6. For performance reasons, moving averages are also aggregated and cached in the database. To generate the cache of moving averages run the following. Automate the command via a cron job.
+  ```
+  bundle exec rake heart:metrics:moving_average fromdate=2013-09-01 todate=2013-09-03 average=30
+  ```
+7. [Optional] If at some point you add a new metric or change the definition of a metric and would like to only update that metric's values, you can run the following rake task:
+  ```
+  bundle exec rake heart:metrics:fetch_between fromdate=2010-12-01 todate=2011-01-01 metric=metricName
+  ```
 
-![developers note][0] All fetch methods must be prefixed with "fetch" followed by an underscore for HEART to find them. CamelCasing is the current standard for metric names after the "fetch". HEART takes the metric name from the database (e.g., "myforumPostsNew") and looks for a translation in your locales to pretty it up.
+![developers note][0] All fetch methods must be prefixed with "fetch" followed by an underscore for HEART to find them. HEART takes the metric name from the database (e.g., "myforumPostsNew") and looks for a translation in your locales to pretty it up.
 
 ### TODO
 1. Support non-MySQL databases
