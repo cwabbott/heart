@@ -1,10 +1,11 @@
 module Heart
   class Metric < Heart::Application
     #include metric fetching modules
-    Dir["#{Rails.root}/lib/fetch/**/*.rb"].each { |file|
-      next if /[0-9]*_*.rb/.match(file.to_s)
+    Dir["#{Rails.root}/lib/heart/**/*.rb"].each { |file|
+      next if /\A[0-9]+_*.*.rb\z/.match(File.basename(file.to_s))
   	  require file
-  	  include ("Fetch::" + File.basename(file).gsub('.rb','').split("_").map{ |ea| ea.capitalize }.join).constantize
+      x = "Heart::" + File.basename(file).gsub('.rb','').split("_").map{ |ea| ea.capitalize }.join
+  	  include (x).constantize
     }
 
     validates_presence_of :fulldate
@@ -61,9 +62,9 @@ module Heart
           if /^fetch_/.match(x.to_s)
             dont_fetch = ["fetch_all"]
             next if dont_fetch.include?(x.to_s)
-            puts "fetching #{x}"
+            puts "#{fulldate} #{x}"
             self.send(x)
-            attribute = x.split(/_/)
+            attribute = x.to_s.split(/_/)
             isometric.send(attribute[1]+"=", Time.now)
             self.save
             isometric.save
@@ -125,7 +126,7 @@ module Heart
           self.send(name+"=",value)
       end
     end    
-    #was used to create moving averages on the fly... became too slow when data sets were large and is now only used in the daily cache cron job
+
     def self.subselects_with_day(days=30)
       subqueries = []
       metric = Metric.new

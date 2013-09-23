@@ -37,8 +37,3 @@ Currently, need to add ```gem 'protected_attributes'``` and ```gem 'haml', '~> 4
 
 ## Creating your own custom metrics
 The real simplicity of this gem comes from the ease in which you can create and isolate your own custom metrics into gems to share between projects. You can start by creating the metrics locally, in your project, then easily move them into a gem if you plan on sharing them with other people / projects.
-
-
-## TODO
-1. Support non-MySQL databases
-2. Officially support Rails 4
