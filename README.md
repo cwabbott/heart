@@ -68,7 +68,7 @@ The real simplicity of HEART comes from the ease in which you can create and iso
       end
     end
   ```
-3. Create a migration to add your metric to HEART's database tables. Move the migration file into the same directory as your fetch module. E.g., this file named 2013092100000123_add_posts_new_to_heart.rb is placed in the /lib/fetch/ directory with the module created in step 2. (Note: _All metrics need to migrate 2 tables 'heart_metrics' and 'heart_isometrics'. The heart_metrics field can be any type of integer, double, float; the heart_isometrics field must be a of type datetime. HEART uses the heart_isometrics field internally to track the datetime that a particular metric's value was last aggregated, while the heart_metrics field is used to store the actual daily values._ )
+3. Create a migration to add your metric to HEART's database tables. Move the migration file into the same directory as your fetch module. E.g., this file named 2013092100000123_add_posts_new_to_heart.rb is placed in the /lib/fetch/ directory with the module created in step 2. (Note: _All metrics need to migrate 2 tables 'heart_metrics' and 'heart_isometrics'. The heart_metrics field can be any type of integer, double, float; the heart_isometrics field must be a type of datetime. HEART uses the heart_isometrics field internally to track the datetime that a particular metric's value was last aggregated, while the heart_metrics field is used to store the actual daily values._ )
 
   ```
     class AddPostsNewToHeartMetrics < ActiveRecord::Migration
@@ -79,7 +79,7 @@ The real simplicity of HEART comes from the ease in which you can create and iso
     end
   ```
 4. Run your migrations. HEART will automatically include the migration files in your lib/fetch directory and its subdirectories (so you can arrange them in sub-folders however you like)
-5. Aggregate your metric data into HEART's tables with the following rake task. This taks will attempt to fetch and update all metric values between and including the dates you specify. Protip: call this command daily via a cron job to automatically aggregate all your metric data.
+5. Aggregate your metric data into HEART's tables with the following rake task. This task will attempt to fetch and update all metric values between and including the dates you specify. Protip: call this command daily via a cron job to automatically aggregate all your metric data.
   ```
   bundle exec rake heart:metrics:fetch_all fromdate=2013-09-01 todate=2013-09-03
   ```
