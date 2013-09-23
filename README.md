@@ -53,7 +53,7 @@ gem 'haml', '~> 4.0'
 ## Creating your own custom metrics
 The real simplicity of HEART comes from the ease in which you can create and isolate your own custom metrics to share between projects. Here's an example on how to add a metric to track the number of new posts in our imaginary forum which is written in Ruby on Rails (the same project we have the gem installed in):
 
-1. Create a 'fetch' directory inside lib
+1. Create a 'heart' directory inside lib
 2. Create a module in your lib directory to encase your metric definitions. All metric definitions can leverage the special fulldate method to allow HEART to pass in the current date it is trying to aggregate. It should look like this
 
   ```ruby
