@@ -92,7 +92,7 @@ The real simplicity of HEART comes from the ease in which you can create and iso
   ```
   bundle exec rake heart:metrics:fetch_all fromdate=2013-09-01 todate=2013-09-03
   ```
-6. For performance reasons, moving averages are also aggregated and cached in the database. To generate the cache of moving averages run the following. Automate the command via a cron job.
+6. For performance reasons, moving averages are also aggregated and cached in the database. To generate the cache of moving averages run the following. Protip: Automate this command via a cron job.
   ```
   bundle exec rake heart:metrics:moving_average fromdate=2013-09-01 todate=2013-09-03 average=30
   ```
@@ -100,9 +100,14 @@ The real simplicity of HEART comes from the ease in which you can create and iso
   ```
   bundle exec rake heart:metrics:fetch_between fromdate=2010-12-01 todate=2011-01-01 metric=metricName
   ```
-
+  8. Add translations for your new metric(s). In the config/locales/en.yml add your translations under "en_heart". Translate both your metric and your module's name (which you hopefully prefixed with your module name) like the following:
+  ```yaml
+  en_heart:
+   myforum: "My Forum"
+   myforumPostsNew: "New Posts"
+  ```
+  
 ![developers note][0] All fetch methods must be prefixed with "fetch" followed by an underscore for HEART to find them. HEART takes the metric name from the database (e.g., "myforumPostsNew") and looks for a translation in your locales to pretty it up.
-
 
 # Todo
 1. HEART in non-MySQL databases
