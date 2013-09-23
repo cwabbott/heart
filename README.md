@@ -101,7 +101,7 @@ The real simplicity of HEART comes from the ease in which you can create and iso
   bundle exec rake heart:metrics:fetch_between fromdate=2010-12-01 todate=2011-01-01 metric=metricName
   ```
   8. Add translations for your new metric(s). In the config/locales/en.yml add your translations under "en_heart". Translate both your metric and your module's name (which you hopefully prefixed with your module name) like the following:
-  ```yaml
+  ```yml
   en_heart:
    myforum: "My Forum"
    myforumPostsNew: "New Posts"
