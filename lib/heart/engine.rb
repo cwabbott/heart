@@ -6,7 +6,7 @@ module Heart
     # instead of copying to app with heart:install:migrations
     initializer :append_migrations do |app|
       # support migration files from metric fetch definition directories in root app lib/fetch
-      config.paths['db/migrate'] << 'lib/fetch'
+      app.config.paths['db/migrate'] << 'lib/heart'
       # also support migration files inside engine db/migrate directories
       unless app.root.to_s.match root.to_s
         if Rails.version.match /\A3\..*\z/

@@ -24,6 +24,7 @@ en_heart:
   week: Week
   month: Month
   year: Year
+  metrics: Metrics
   measurements: Measurements
   segments: "Segments"
   option:
