@@ -16,7 +16,7 @@
       %hr
     .span-10.yspan-4.scrollable 
       - namespace = ""
-      - Heart::Metric.columns.sort_by{ |c| I18n.t(c.name) }.each do |column|
+      - Heart::Metric.columns.sort_by{ |c| c.name }.each do |column|
         - next if ['date','datetime', 'time'].include?(column.type.downcase) or Heart::Metric.metadata.include?(column.name) or Heart::Metric.groupbydata.include?(column.name)
         - if namespace != (column.name.underscore.humanize.split(" ").first)
           - namespace = (column.name.underscore.humanize.split(" ").first)
