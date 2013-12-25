@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/cwabbott/heart"
   s.summary     = "A Rails Engine to help you quickly start visualizing time-series metrics."
   s.description = "HEART helps you start tracking and graphing time-series metrics from your application's data. Simple to setup, so you can start viewing trends in your own custom metrics without coding."
+  s.license = 'MIT'
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
