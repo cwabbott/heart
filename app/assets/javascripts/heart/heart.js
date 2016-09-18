@@ -1,3 +1,13 @@
+//[JTGP page32 "Augmenting Types"]
+Array.prototype.findIndex = function(value){
+  var ctrl = false;
+  for (var i=0; i < this.length; i++) {
+    if (this[i] == value) {
+      return i;
+    }
+  }
+  return ctrl;
+};
 //[JTGP == "Javascript the Good Parts"]
 //[JTGP page25 "Global Abatement"]
 var HEART = function(){
