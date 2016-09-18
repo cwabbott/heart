@@ -9,5 +9,10 @@ module Heart
       end
     end
     
+    def button_to_function(name, function=nil, html_options={})
+      onclick = "#{"#{html_options[:onclick]}; " if html_options[:onclick]}#{function};"
+      tag(:input, html_options.merge(:type => 'button', :value => name, :onclick => onclick))
+    end
+    
   end
 end
