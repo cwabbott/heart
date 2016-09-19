@@ -11,6 +11,14 @@ module Heart
     validates_presence_of :fulldate
     validate :validate_dayofweek, :validate_dayofyear, :validate_weekofyear, :validate_monthofyear, :validate_year, :on => :create
     attr_accessible :fulldate, :movingaverage
+ 
+    def from
+      Time.parse("#{fulldate} 00:00:00")
+    end
+  
+    def to
+      Time.parse("#{fulldate} 23:59:59")
+    end
 
     def validate_dayofweek
       self.dayofweek = self.fulldate.wday
